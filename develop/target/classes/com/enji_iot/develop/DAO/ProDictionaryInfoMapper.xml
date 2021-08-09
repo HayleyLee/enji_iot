@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.ProDictionaryInfoMapper">
+    <select id="selectOne" resultType="com.enji_iot.util.Entity.bo.ProDictionaryInfoBO">
+        SELECT * FROM pro_dictionary_info WHERE 1=1
+        <include refid="condition" />
+        <include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_1" />
+    </select>
+
+    <select id="selectPageList" resultType="com.enji_iot.util.Entity.bo.ProDictionaryInfoBO" >
+        SELECT * FROM pro_dictionary_info  t
+        WHERE 1=1
+        <include refid="condition" />
+        ORDER BY t.id DESC
+        <include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+    </select>
+    <select id="selectPageListCount" parameterType="com.enji_iot.util.Entity.bo.ProDictionaryInfoBO"
+            resultType="java.lang.Integer" >
+        SELECT COUNT(1) FROM pro_dictionary_info  t
+        WHERE 1=1
+        <include refid="condition" />
+    </select>
+    <sql id="condition">
+        <if test="id != null">
+            AND id=#{proDictionaryInfo.id}
+        </if>
+        <if test="p_code != null">
+            AND p_code=#{proDictionaryInfo.p_code}
+        </if>
+        <if test="isOnlyP==1">
+            AND p_code IS NULL
+        </if>
+        <if test="code !=null">
+            AND code =#{proDictionaryInfo.code}
+        </if>
+        <if test="name !=null and name!=''">
+            AND name like concat("%", #{proDictionaryInfo.name},"%")
+        </if>
+        <if test="dictionary_name !=null and dictionary_name !=''">
+            AND dictionary_name like concat("%", #{proDictionaryInfo.dictionary_name},"%")
+        </if>
+        <if test="delete_flag !=null">
+            AND delete_flag = #{proDictionaryInfo.delete_flag}
+        </if>
+    </sql>
+
+    <select id="generateCode" resultType="java.lang.Integer">
+		SELECT MAX(code)+1 FROM pro_dictionary_info
+	</select>
+
+    <insert id="insert" parameterType="com.enji_iot.util.Entity.bo.ProDictionaryInfoBO">
+		INSERT INTO pro_dictionary_info (p_dictionary_name,dictionary_name,p_code,code,name,value,seq)
+		VALUES (#{proDictionaryInfo.p_dictionary_name},#{proDictionaryInfo.dictionary_name},#{proDictionaryInfo.p_code}, #{proDictionaryInfo.code} ,#{proDictionaryInfo.name},#{proDictionaryInfo.value},#{proDictionaryInfo.seq})
+	</insert>
+
+    <update id="update" parameterType="com.enji_iot.util.Entity.bo.ProDictionaryInfoBO">
+        UPDATE pro_dictionary_info SET id=id
+        <if test="delete_flag != null">
+            ,delete_flag=#{proDictionaryInfo.delete_flag}
+        </if>
+        <if test="p_dictionary_name != null and p_dictionary_name!= ''">
+            ,p_dictionary_name=#{proDictionaryInfo.p_dictionary_name}
+        </if>
+        <if test="dictionary_name !=null and dictionary_name!=''">
+            ,dictionary_name=#{proDictionaryInfo.dictionary_name}
+        </if>
+        <if test="p_code !=null">
+            ,p_code=#{proDictionaryInfo.p_code}
+        </if>
+        <if test="code !=null">
+            ,code=#{proDictionaryInfo.code}
+        </if>
+        <if test="name !=null and name !=''">
+            ,name=#{proDictionaryInfo.name}
+        </if>
+        <if test="value!=null">
+            ,value=#{proDictionaryInfo.value}
+        </if>
+        <if test="seq!=null">
+            ,seq=#{proDictionaryInfo.seq}
+        </if>
+        WHERE id=#{proDictionaryInfo.id}
+    </update>
+
+    <update id="updateByCondition" parameterType="com.enji_iot.util.Entity.bo.ProDictionaryInfoBO">
+        UPDATE pro_dictionary_info SET id=id
+        <if test="p_dictionary_name != null and p_dictionary_name!= ''">
+            ,p_dictionary_name=#{proDictionaryInfo.p_dictionary_name}
+        </if>
+        WHERE p_code=#{proDictionaryInfo.p_code}
+    </update>
+    <delete id="deleteByPcode" parameterType="com.enji_iot.util.Entity.bo.ProDictionaryInfoBO">
+		DELETE FROM pro_dictionary_info WHERE p_code=#{proDictionaryInfo.p_code}
+	</delete>
+    <delete id="delete" parameterType="com.enji_iot.util.Entity.bo.ProDictionaryInfoBO">
+		DELETE FROM pro_dictionary_info WHERE id=#{proDictionaryInfo.id}
+	</delete>
+</mapper>

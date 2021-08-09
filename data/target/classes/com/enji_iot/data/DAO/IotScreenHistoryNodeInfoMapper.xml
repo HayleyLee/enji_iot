@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.data.DAO.IotScreenHistoryNodeInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO">
+		INSERT INTO iot_history_node_data
+		(scene_id,device_code,name,val,unit,time)
+		VALUES
+		(#{iotHistoryNodeInfo.scene_id},#{iotHistoryNodeInfo.device_code},#{iotHistoryNodeInfo.name},#{iotHistoryNodeInfo.val},#{iotHistoryNodeInfo.unit},#{iotHistoryNodeInfo.time})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_history_node_data ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.IotHistorySensorDataBO">
+		UPDATE iot_history_sensor_data SET mtime=now()
+		<if test="sensor_id!=null">
+			,sensor_id=#{iotHistoryNodeInfo.sensor_id}
+		</if>
+		<if test="sdata!=null">
+			,sdata=#{iotHistoryNodeInfo.sdata}
+		</if>
+		<if test="aid!=null">
+			,aid=#{iotHistoryNodeInfo.aid}
+		</if>
+		WHERE id=#{iotHistoryNodeInfo.id}
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* , t.name AS sensor_name ,t.measure_unit_type,t.iot_sensor_type ,date_format( o.atime, '%Y-%m-%d %H:%i:%s') AS atimestr
+		 FROM iot_history_sensor_data o LEFT JOIN iot_sensor_info t ON o.sensor_id = t.id
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{iotHistoryNodeInfo.id}
+		</if>
+		<if test="sensor_id!=null">
+			AND o.sensor_id=#{iotHistoryNodeInfo.sensor_id}
+		</if>
+		<if test="sensor_name !=null and sensor_name !=''">
+			AND o.sensor_id IN ( SELECT id FROM iot_sensor_info WHERE name LIKE  CONCAT("%", #{iotHistoryNodeInfo.sensor_name},"%") )
+		</if>
+		<if test="scene_id != null">
+			AND o.sensor_id IN ( SELECT id FROM iot_sensor_info WHERE node_id IN ( SELECT id FROM iot_node_info WHERE scene_id = #{iotHistoryNodeInfo.scene_id} ) )
+		</if>
+		<if test="sdata!=null">
+			AND o.sdata=#{iotHistoryNodeInfo.sdata}
+		</if>
+		<if test="aid!=null">
+			AND o.aid=#{iotHistoryNodeInfo.aid}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{iotHistoryNodeInfo.atime}
+		</if>
+		<if test="start_time !=null">
+			AND o.atime >= #{iotHistoryNodeInfo.start_time}
+		</if>
+		<if test="end_time !=null">
+			AND o.atime &lt;= #{iotHistoryNodeInfo.end_time}
+		</if>
+	</sql>
+	<select id="selectGroupByPage" resultType="com.enji_iot.util.Entity.bo.IotHistorySensorDataBO">
+		SELECT  any_value(o.id) id ,any_value(o.sensor_id) sensor_id ,any_value(o.sdata) sdata , any_value(o.aid) aid , any_value(o.atime) atime
+		, any_value(t.name) sensor_name , any_value(t.measure_unit_type) measure_unit_type ,any_value(t.iot_sensor_type) iot_sensor_type ,
+		date_format(any_value( o.atime), '%Y-%m-%d %H:%i:%s') AS atimestr ,
+		CONCAT( DATE_FORMAT( any_value(o.atime) ,'${iotHistoryNodeInfo.interval_p1}' ) , TRUNCATE( DATE_FORMAT(any_value(o.atime) ,'${iotHistoryNodeInfo.interval_p2}' )/${iotHistoryNodeInfo.interval_p3},0 )*${iotHistoryNodeInfo.interval_p3} ) gy
+		FROM iot_history_sensor_data o LEFT JOIN iot_sensor_info t ON o.sensor_id = t.id
+		<include refid="sql_select_condition" />
+		GROUP BY gy
+
+		ORDER BY id DESC
+		<include refid="com.enji_iot.data.DAO.Base_DATA_Mapper.sql_limit_condition" />
+	</select>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.IotHistorySensorDataBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.data.DAO.Base_DATA_Mapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotHistorySensorDataBO">
+		SELECT COUNT(1) FROM iot_history_sensor_data o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.IotHistorySensorDataBO"
+			resultType="com.enji_iot.util.Entity.bo.IotHistorySensorDataBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{iotHistoryNodeInfo.id} LIMIT 1
+	</select>
+	<select id="selectHistoryNodeData" parameterType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO" resultType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO">
+		SELECT * FROM iot_history_node_data WHERE 1=1
+		<if test="scene_id!=null">AND scene_id = #{iotHistoryNodeInfo.scene_id}</if>
+		<if test="device_code!=null">AND device_code = #{iotHistoryNodeInfo.device_code}</if>
+		<if test="name!=null">AND name = #{iotHistoryNodeInfo.name}</if>
+		<if test="start_time !=null">AND time >= #{iotHistoryNodeInfo.start_time}</if>
+		<if test="end_time !=null">	AND time &lt;= #{iotHistoryNodeInfo.end_time}</if>
+		ORDER BY id DESC
+		<if test="startPage !=null and endPage!=null">LIMIT ${pageBean.startPage},${pageBean.endPage}</if>
+	</select>
+	<select id="selectHistoryNodeCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO">
+		SELECT count(*) FROM iot_history_node_data WHERE 1=1
+		<if test="scene_id!=null">AND scene_id = #{iotHistoryNodeInfo.scene_id}</if>
+		<if test="device_code!=null">AND device_code = #{iotHistoryNodeInfo.device_code}</if>
+		<if test="name!=null">AND name = #{iotHistoryNodeInfo.name}</if>
+		<if test="start_time !=null">AND time >= #{iotHistoryNodeInfo.start_time}</if>
+		<if test="end_time !=null">	AND time &lt;= #{iotHistoryNodeInfo.end_time}</if>
+	</select>
+</mapper>

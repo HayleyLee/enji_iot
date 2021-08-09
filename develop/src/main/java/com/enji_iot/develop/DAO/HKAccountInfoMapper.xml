@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.HKAccountInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.HkAccountInfoBO">
+		INSERT INTO hk_account_info
+		(appKey,secret,accessToken,aid,mid)
+		VALUES
+		(#{HKAccountInfo.appKey},#{HKAccountInfo.secret},#{HKAccountInfo.accessToken},#{HKAccountInfo.aid},#{HKAccountInfo.mid})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from hk_account_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.HkAccountInfoBO">
+		UPDATE hk_account_info SET mtime=now()
+		<if test="appkey!=null and appkey !=''">
+			,appkey=#{HKAccountInfo.appkey}
+		</if>
+		<if test="secret!=null and secret !=''">
+			,secret=#{HKAccountInfo.secret}
+		</if>
+		<if test="accesstoken!=null and accesstoken !=''">
+			,accesstoken=#{HKAccountInfo.accesstoken}
+		</if>
+		<if test="aid!=null">
+			,aid=#{HKAccountInfo.aid}
+		</if>
+		<if test="mid!=null">
+			,mid=#{HKAccountInfo.mid}
+		</if>
+		WHERE id=#{HKAccountInfo.id}
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* FROM hk_account_info o 
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{HKAccountInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{HKAccountInfo.id}
+		</if>
+		<if test="appKey!=null and appKey !=''">
+			AND o.appKey = #{HKAccountInfo.appKey}
+		</if>
+		<if test="secret!=null and secret !=''">
+			AND o.secret = #{HKAccountInfo.secret}
+		</if>
+		<if test="accessToken!=null and accessToken !=''">
+			AND o.accessToken = #{HKAccountInfo.accessToken}
+		</if>
+		<if test="aid!=null">
+			AND o.aid=#{HKAccountInfo.aid}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{HKAccountInfo.atime}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{HKAccountInfo.mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{HKAccountInfo.mtime}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.HkAccountInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.HkAccountInfoBO">
+		SELECT COUNT(1) FROM hk_account_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.HkAccountInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.HkAccountInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{HKAccountInfo.id} LIMIT 1
+	</select>
+</mapper>

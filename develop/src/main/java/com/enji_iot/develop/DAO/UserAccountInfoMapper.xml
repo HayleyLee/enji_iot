@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.UserAccountInfoMapper">
+	<insert id="insertSimple" parameterType="com.enji_iot.util.Entity.bo.UserAccountInfoBO">
+		INSERT INTO user_account_info
+		(user_id)
+		VALUES
+		(#{userAccountInfo.user_id})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from user_account_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="updateVoiceNum" parameterType="com.enji_iot.util.Entity.bo.UserAccountInfoBO">
+		UPDATE user_account_info SET voice_num=voice_num-1 where id=#{userAccountInfo.id} AND voice_num>0
+	</update>
+	<update id="updateSMS_num" parameterType="com.enji_iot.util.Entity.bo.UserAccountInfoBO">
+		UPDATE user_account_info SET sms_num=sms_num-1 where id=#{id} AND sms_num>0
+	</update>
+	<!-- 检索记录字段 -->
+	<sql id="sql_select_field">
+		SELECT o.* FROM user_account_info o
+	</sql>
+	<select id="selectDetail" parameterType="com.enji_iot.util.Entity.bo.UserAccountInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.UserAccountInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.user_id=#{userAccountInfo.user_id} LIMIT 1
+	</select>
+</mapper>

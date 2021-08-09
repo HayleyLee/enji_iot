@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.DeviceTemplateInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateInfoBO">
+		INSERT INTO device_template_info
+		(name,user_id,delete_flag,aid,mid)
+		VALUES
+		(#{deviceTemplateInfo.name},#{deviceTemplateInfo.user_id},#{deviceTemplateInfo.delete_flag},#{deviceTemplateInfo.aid},#{deviceTemplateInfo.mid})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from device_template_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateInfoBO">
+		UPDATE device_template_info SET mtime=now()
+		<if test="name!=null and name !=''">
+			,name=#{deviceTemplateInfo.name}
+		</if>
+		<if test="user_id!=null">
+			,user_id=#{deviceTemplateInfo.user_id}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{deviceTemplateInfo.delete_flag}
+		</if>
+		<if test="aid!=null">
+			,aid=#{deviceTemplateInfo.aid}
+		</if>
+		<if test="mid!=null">
+			,mid=#{deviceTemplateInfo.mid}
+		</if>
+		WHERE id=#{deviceTemplateInfo.id}
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* , ( SELECT COUNT(1) FROM device_template_sensor_info WHERE device_template_id = o.id AND delete_flag=0 ) AS sensor_num ,
+		( SELECT COUNT(1) FROM device_template_tigger_info WHERE device_template_id = o.id AND delete_flag=0 ) AS trigger_num
+		  FROM device_template_info o
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{deviceTemplateInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name  LIKE  CONCAT("%", #{deviceTemplateInfo.name},"%")
+		</if>
+		<if test="user_id!=null">
+			AND o.user_id=#{deviceTemplateInfo.user_id}
+		</if>
+		<if test="delete_flag!=null">
+			AND o.delete_flag=#{deviceTemplateInfo.delete_flag}
+		</if>
+		<if test="aid!=null">
+			AND o.aid=#{deviceTemplateInfo.aid}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{deviceTemplateInfo.atime}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{deviceTemplateInfo.mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{deviceTemplateInfo.mtime}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.DeviceTemplateInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id ASC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateInfoBO">
+		SELECT COUNT(1) FROM device_template_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.DeviceTemplateInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{deviceTemplateInfo.id} LIMIT 1
+	</select>
+</mapper>

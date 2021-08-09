@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.IotLpmInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotLpmInfoBO">
+		INSERT INTO iot_lpm_info
+		(name,ip,port,lpm_key,delete_flag,aid,mid)
+		VALUES
+		(#{iotLpmInfo.name},#{iotLpmInfo.ip},#{iotLpmInfo.port},#{iotLpmInfo.lpm_key},#{iotLpmInfo.delete_flag},#{iotLpmInfo.aid},#{iotLpmInfo.mid})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_lpm_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.IotLpmInfoBO">
+		UPDATE iot_lpm_info SET mtime=now()
+		<if test="name!=null and name !=''">
+			,name=#{iotLpmInfo.name}
+		</if>
+		<if test="ip!=null and ip !=''">
+			,ip=#{iotLpmInfo.ip}
+		</if>
+		<if test="port!=null and port !=''">
+			,port=#{iotLpmInfo.port}
+		</if>
+		<if test="lpm_key!=null and lpm_key !=''">
+			,lpm_key=#{iotLpmInfo.lpm_key}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{iotLpmInfo.delete_flag}
+		</if>
+		<if test="aid!=null">
+			,aid=#{iotLpmInfo.aid}
+		</if>
+		<if test="mid!=null">
+			,mid=#{iotLpmInfo.mid}
+		</if>
+		WHERE id=#{iotLpmInfo.id}
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* FROM iot_lpm_info o
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{iotLpmInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{iotLpmInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name LIKE CONCAT("%", #{iotLpmInfo.name},"%")
+		</if>
+		<if test="ip!=null and ip !=''">
+			AND o.ip = #{iotLpmInfo.ip}
+		</if>
+		<if test="port!=null and port !=''">
+			AND o.port = #{iotLpmInfo.port}
+		</if>
+		<if test="lpm_key!=null and lpm_key !=''">
+			AND o.lpm_key = #{iotLpmInfo.lpm_key}
+		</if>
+		<if test="delete_flag!=null">
+			AND o.delete_flag=#{iotLpmInfo.delete_flag}
+		</if>
+		<if test="aid!=null">
+			AND o.aid=#{iotLpmInfo.aid}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{iotLpmInfo.atime}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{iotLpmInfo.mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{iotLpmInfo.mtime}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.IotLpmInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotLpmInfoBO">
+		SELECT COUNT(1) FROM iot_lpm_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.IotLpmInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotLpmInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{iotLpmInfo.id} LIMIT 1
+	</select>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.data.DAO.Base_DATA_Mapper">
+
+	<!-- 限制一条记录 -->
+	<sql id="sql_limit_1">
+		LIMIT 1
+	</sql>
+	
+		<!-- 分页条件 -->
+	<sql id="sql_limit_condition">
+		<if test="limit!=null">
+			LIMIT #{limit}
+		</if>
+		<if test="offset!=null">
+			OFFSET #{offset}
+		</if>
+	</sql>
+
+</mapper>

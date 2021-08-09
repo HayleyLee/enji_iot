@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.AlarmTriggerRecordMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerRecordBO">
+		INSERT INTO alarm_trigger_record
+		(user_id,trigger_type,remark,content)
+		VALUES
+		(#{AlarmTriggerRecord.user_id},#{AlarmTriggerRecord.trigger_type},#{AlarmTriggerRecord.remark},#{AlarmTriggerRecord.content})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from alarm_trigger_record ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerRecordBO">
+		UPDATE alarm_trigger_record SET id=id
+		<if test="user_id!=null">
+			,user_id=#{AlarmTriggerRecord.user_id}
+		</if>
+		<if test="trigger_type!=null">
+			,trigger_type=#{AlarmTriggerRecord.trigger_type}
+		</if>
+		<if test="remark!=null and remark !=''">
+			,remark=#{AlarmTriggerRecord.remark}
+		</if>
+		<if test="content!=null and content !=''">
+			,content=#{AlarmTriggerRecord.content}
+		</if>
+		WHERE id=#{AlarmTriggerRecord.id}
+	</update>
+	<update id="updateSmsVocieNum" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerRecordBO">
+		UPDATE user_account_info SET id=id
+		<if test="sms_num!=null">
+			,sms_num= sms_num + ${AlarmTriggerRecord.sms_num}
+		</if>
+		<if test="voice_num !=null ">
+			,voice_num= voice_num + ${AlarmTriggerRecord.voice_num}
+		</if>
+		WHERE user_id = #{AlarmTriggerRecord.user_id}
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* , u.name FROM alarm_trigger_record o LEFT JOIN user_info u ON u.id = o.user_id
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{AlarmTriggerRecord.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{AlarmTriggerRecord.id}
+		</if>
+		<if test="user_id!=null">
+			AND o.user_id=#{AlarmTriggerRecord.user_id}
+		</if>
+		<if test="trigger_type!=null">
+			AND o.trigger_type=#{AlarmTriggerRecord.trigger_type}
+		</if>
+		<if test="remark!=null and remark !=''">
+			AND o.remark = #{AlarmTriggerRecord.remark}
+		</if>
+		<if test="content!=null and content !=''">
+			AND o.content = #{alarmTriggerRecord.content}
+		</if>
+		<if test="start_time !=null">
+			AND o.atime >= #{AlarmTriggerRecord.start_time}
+		</if>
+		<if test="end_time !=null">
+			AND o.atime &lt;= #{AlarmTriggerRecord.end_time}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.AlarmTriggerRecordBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerRecordBO">
+		SELECT COUNT(1) FROM alarm_trigger_record o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectStatisticPage" resultType="com.enji_iot.util.Entity.bo.AlarmTriggerRecordBO">
+		SELECT user_id , count(trigger_type=52 or null) AS sms_num ,
+		count(trigger_type=360 or null)  AS voice_num , u.name FROM alarm_trigger_record o
+		INNER JOIN user_info u ON u.id = o.user_id
+		WHERE 1=1
+		<if test="user_id!=null">
+			AND o.user_id=#{alarmTriggerRecord.user_id}
+		</if>
+		<if test="name !=null and name != '' ">
+			AND name LIKE  CONCAT("%", #{alarmTriggerRecord.name},"%")
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{alarmTriggerRecord.atime}
+		</if>
+		<if test="start_time !=null">
+			AND o.atime >= #{alarmTriggerRecord.start_time}
+		</if>
+		<if test="end_time !=null">
+			AND o.atime &lt;= #{alarmTriggerRecord.end_time}
+		</if>
+		GROUP BY user_id
+		ORDER BY user_id ASC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerRecordBO"
+			resultType="com.enji_iot.util.Entity.bo.AlarmTriggerRecordBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{alarmTriggerRecord.id} LIMIT 1
+	</select>
+</mapper>

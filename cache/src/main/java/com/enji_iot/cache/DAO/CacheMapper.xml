@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.enji_iot.cache.DAO.CacheMapper">
+    <select id="iot_node_info_selectList" resultType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+        select * from iot_node_info order by seq asc,id asc
+    </select>
+    <update id="iot_node_info_updateNodeStatus" parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+        UPDATE iot_node_info SET mtime=now()
+        <if test="nodeInfo.iot_node_status!=null">
+            ,iot_node_status=#{nodeInfo.iot_node_status}
+        </if>
+        WHERE device_code=#{nodeInfo.device_code}
+    </update>
+    <select id="sys_config_info_selectList" resultType="com.enji_iot.util.Entity.bo.SysConfigInfoBO">
+        SELECT * FROM sys_config_info ORDER BY id DESC
+    </select>
+    <select id="pro_dictionary_info_selectList" resultType="com.enji_iot.util.Entity.bo.ProDictionaryInfoBO">
+        SELECT * FROM pro_dictionary_info
+    </select>
+    <select id="user_account_info_selectList" resultType="com.enji_iot.util.Entity.bo.UserAccountInfoBO">
+        SELECT * FROM user_account_info ORDER BY id DESC
+    </select>
+    <select id="user_info_selectList" resultType="com.enji_iot.util.Entity.bo.UserInfoBO">
+        SELECT o.* , ua.sms_num , ua.voice_num FROM user_info o LEFT JOIN user_account_info ua ON o.id = ua.user_id ORDER BY o.id DESC
+    </select>
+    <select id="iot_lpm_info_selectList" resultType="com.enji_iot.util.Entity.bo.IotLpmInfoBO">
+        SELECT * FROM iot_lpm_info ORDER BY id DESC
+    </select>
+    <select id="iot_scene_info_selectList" resultType="com.enji_iot.util.Entity.bo.IotSceneInfoBO">
+        SELECT * FROM iot_scene_info ORDER BY seq ASC, id ASC
+    </select>
+    <select id="iot_trigger_info_selectList" resultType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO">
+        SELECT o.* ,t.name AS from_sensor_name , t.node_id as node_id FROM iot_trigger_info o LEFT JOIN iot_sensor_info t ON o.from_sensor_id = t.id ORDER BY o.id DESC
+    </select>
+    <select id="iot_video_info_selectList" resultType="com.enji_iot.util.Entity.bo.IotVideoInfoBO">
+        SELECT o.*,s.name AS scene_name FROM iot_video_info o LEFT JOIN iot_scene_info s ON o.scene_id = s.id ORDER BY o.id DESC
+    </select>
+    <select id="iot_node_unit_data_selectList" resultType="com.enji_iot.util.Entity.bo.IotNodeUnitDataBO">
+        SELECT * FROM iot_node_unit_data
+    </select>
+</mapper>

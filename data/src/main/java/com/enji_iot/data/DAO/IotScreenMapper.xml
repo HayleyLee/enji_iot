@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.data.DAO.IotScreenMapper">
+	<!-- 检索记录字段 -->
+	<sql id="sql_select_field">
+		SELECT o.* , ic.name AS scene_name, us.name AS user_name FROM iot_node_info o LEFT JOIN iot_scene_info ic ON o.scene_id = ic.id  LEFT JOIN user_info us ON ic.user_id = us.id
+	</sql>
+	<!-- 检索记录条件 -->
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name LIKE CONCAT("%", #{name},"%")
+		</if>
+		<if test="device_code!=null and device_code !='' ">
+			AND o.device_code LIKE CONCAT("%", #{device_code},"%")
+		</if>
+		<if test="iot_node_type!=null">
+			AND o.iot_node_type=#{iot_node_type}
+		</if>
+		<if test="iot_protocal_category!=null and iot_protocal_category !='' ">
+			AND o.iot_protocal_category=#{iot_protocal_category}
+		</if>
+		<if test="seq!=null">
+			AND o.seq=#{seq}
+		</if>
+		<if test="scene_id!=null">
+			AND o.scene_id=#{scene_id}
+		</if>
+		<if test="delete_flag!=null">
+			AND o.delete_flag=#{delete_flag}
+		</if>
+		<if test="user_id !=null">
+			AND  o.scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{user_id} )
+		</if>
+		<if test="iot_node_status!=null">
+			AND o.iot_node_status=#{iot_node_status}
+		</if>
+		<if test="img_id!=null">
+			AND o.img_id=#{img_id}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{atime}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{mtime}
+		</if>
+		<!-- 		<if test="aid !=null"> -->
+		<!-- 			OR o.aid =#{aid} -->
+		<!-- 		</if> -->
+	</sql>
+	<!-- 检索全部记录列表 -->
+	<select id="selectAll" parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.seq ASC , o.id DESC
+	</select>
+
+</mapper>

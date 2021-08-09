@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.VideoFileInfoMapper">
+	<!-- 新增, 并返回id -->
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.VideoFileInfoBO">
+		INSERT INTO video_file_info
+		(video_id,name,fix)
+		VALUES
+		(#{videoFileInfo.video_id},#{videoFileInfo.name},#{videoFileInfo.fix})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from video_file_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+
+
+	<!-- 修改 -->
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.VideoFileInfoBO">
+		UPDATE video_file_info SET mtime=now()
+		<if test="video_id!=null">
+			,video_id=#{videoFileInfo.video_id}
+		</if>
+		<if test="name!=null and name !=''">
+			,name=#{videoFileInfo.name}
+		</if>
+		<if test="fix!=null and fix !=''">
+			,fix=#{videoFileInfo.fix}
+		</if>
+		WHERE id=#{videoFileInfo.id}
+	</update>
+
+	<!-- 检索记录 -->
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.VideoFileInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.VideoFileInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{videoFileInfo.id} LIMIT 1
+	</select>
+
+	<!-- 检索记录字段 -->
+	<sql id="sql_select_field">
+		SELECT o.* FROM video_file_info o 
+	</sql>
+
+	<!-- 检索记录条件 -->
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{videoFileInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{videoFileInfo.id}
+		</if>
+		<if test="video_id!=null">
+			AND o.video_id=#{videoFileInfo.video_id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name = #{videoFileInfo.name}
+		</if>
+		<if test="fix!=null and fix !=''">
+			AND o.fix = #{videoFileInfo.fix}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{videoFileInfo.atime}
+		</if>
+	</sql>
+	<!-- 检索记录列表 -->
+	<select id="select" resultType="com.enji_iot.util.Entity.bo.VideoFileInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+	</select>
+
+	<!-- 检索记录列表 -->
+	<select id="selectPage" parameterType="com.enji_iot.util.Entity.bo.VideoFileInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.VideoFileInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+
+	<!-- 检索记录数量 -->
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.VideoFileInfoBO">
+		SELECT COUNT(1) FROM video_file_info o
+		<include refid="sql_select_condition" />
+	</select>
+</mapper>

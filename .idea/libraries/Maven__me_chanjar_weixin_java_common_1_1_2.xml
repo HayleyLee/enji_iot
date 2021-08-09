@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: me.chanjar:weixin-java-common:1.1.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/me/chanjar/weixin-java-common/1.1.2/weixin-java-common-1.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/me/chanjar/weixin-java-common/1.1.2/weixin-java-common-1.1.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/me/chanjar/weixin-java-common/1.1.2/weixin-java-common-1.1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Arise Admin Dashboard" />
+		<meta name="keywords" content="Admin, Dashboard, Bootstrap3, Sass, transform, CSS3, HTML5, Web design, UI Design, Responsive Dashboard, Responsive Admin, Admin Theme, Best Admin UI, Bootstrap Theme, Themeforest, Bootstrap, C3 Graphs, D3 Graphs, NVD3 Graphs, Admin Skin, Black Admin Dashboard, Grey Admin Dashboard, Dark Admin Dashboard, Simple Admin Dashboard, Simple Admin Theme, Simple Bootstrap Dashboard, Invoice, Tasks, Profile" />
+		<meta name="author" content="Ramji" />
+		<link rel="shortcut icon" href="img/fav2.png">
+		<title>恩吉物联网平台</title>
+		<script type="text/javascript" src="commonCss.js"></script>
+	</head>
+	<body>
+		<!-- 加载动画 -->
+		<div class="loading-wrapper">
+			<div class="loading">
+				<h5>Loading...</h5>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+		<!-- 头部 starts -->
+		<header>
+			<!-- Logo starts -->
+			<a href="index.html" class="logo">
+				<img src="img/enjiLogo_w.png" alt="广西恩吉" width="40px"/>
+			</a>
+			<!-- Logo ends -->
+
+			<!-- Header actions starts -->
+			<ul id="header-actions" class="clearfix">
+				<li class="list-box hidden-xs dropdown">
+					<a id="notify" href=" " role="button" class="dropdown-toggle" data-toggle="dropdown">
+						<i class="icon-paper-plane" style="font-size: 25px"></i>
+					</a >
+					<span class="info-label red-bg">3</span>
+					<ul class="dropdown-menu imp-notify">
+						<li class="dropdown-header">您有3条系统消息</li>
+						<li>
+							<div class="icon">
+								<img src="img/thumbs/user10.png" alt="Arise Admin">
+							</div>
+							<div class="details">
+								<strong class="text-red">“2020年度动画评选”投票开始！</strong>
+								<span>东京动画奖节2020的“年度动画”评选新增“海外人气奖”.</span>
+							</div>
+						</li>
+						<li onclick="sys_notify()" class="dropdown-footer" style="text-align: center">查看所有</li>
+					</ul>
+				</li>
+				<li class="list-box hidden-xs dropdown">
+					<a id="drop2" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">
+						<i class="icon-warning2"></i>
+					</a>
+					<span class="info-label blue-bg">5</span>
+					<ul class="dropdown-menu imp-notify">
+						<li class="dropdown-header">You have 3 notifications</li>
+						<li>
+							<div class="icon">
+								<img src="img/thumbs/user10.png" alt="Arise Admin">
+							</div>
+							<div class="details">
+								<strong class="text-red">Rogie King</strong>
+								<span>Firefox is a free, open-source web browser from Mozilla.</span>
+							</div>
+						</li>
+						<li>
+							<div class="icon">
+								<img src="img/thumbs/user6.png" alt="Arise Admin">
+							</div>
+							<div class="details">
+								<strong class="text-green">Dan Cederholm</strong>
+								<span>IE is a free web browser from Microsoft.</span>
+							</div>
+						</li>
+						<li>
+							<div class="icon">
+								<img src="img/thumbs/user1.png" alt="Arise Admin">
+							</div>
+							<div class="details">
+								<strong class="text-blue">Justin Mezzell</strong>
+								<span>Safari is known for its sleek design and ease of use.</span>
+							</div>
+						</li>
+						<li class="dropdown-footer">See all the notifications</li>
+					</ul>
+				</li>
+				<li class="list-box user-admin hidden-xs dropdown">
+					<div class="admin-details">
+						<div class="name">Sean</div>
+						<div class="designation">超级管理员</div>
+					</div>
+					<a id="drop4" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">
+						<i class="icon-user"></i>
+					</a>
+					<ul class="dropdown-menu sm">
+						<li class="dropdown-content">
+							<a href="#">个人信息</a>
+							<a href="#">系统设置</a>
+							<a href="#">退出登录</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<button type="button" id="toggleMenu" class="toggle-menu">
+						<i class="collapse-menu-icon"></i>
+					</button>
+				</li>
+			</ul>
+			<!-- Header actions ends -->
+		</header>
+		<!-- 左边侧边栏 start -->
+		<div class="vertical-nav vertical-nav-sm">
+
+			<!-- Collapse menu starts -->
+			<button class="collapse-menu">
+				<i class="icon-menu2"></i>
+			</button>
+			<!-- Collapse menu ends -->
+
+			<!-- Current user starts -->
+			<div class="user-details clearfix">
+				<a href="#" class="user-img">
+<!--					<img src="img/thumbs/user1.png" alt="User Info">-->
+					<i class="icon-user" style="font-size: 50px;color: #A9BD7A"></i>
+<!--					<span class="likes-info">9</span>-->
+				</a>
+				<h5 class="user-name">Sean</h5>
+			</div>
+			<!-- Current user ends -->
+
+			<!-- Sidebar menu start -->
+			<ul class="menu clearfix">
+				<li class="active selected">
+					<a href="#" id="iot_index">
+						<i class="icon-monitor2"></i>
+						<span class="menu-item">首页</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="icon-eye4"></i>
+						<span class="menu-item">平台概览</span>
+						<span class="down-arrow"></span>
+					</a>
+					<ul>
+						<li>
+							<a name="tab" href='javascript: ' id="iot_scene_info">场景信息</a>
+						</li>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_dev_address">设备位置</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href='#' id="iot_dev_monitor">
+						<i class="icon-meter"></i>
+						<span class="menu-item">设备监控</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="icon-warning2"></i>
+						<span class="menu-item">报警信息</span>
+						<span class="down-arrow"></span>
+					</a>
+					<ul>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_alarm_unread">未读报警</a>
+						</li>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_alarm_history">历史报警</a>
+						</li>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_alarm_contact">报警联系人</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">
+						<i class="icon-hour-glass"></i>
+						<span class="menu-item">历史数据</span>
+						<span class="down-arrow"></span>
+					</a>
+					<ul>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_dev_history">设备历史数据</a>
+						</li>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_dev_analyze">历史数据分析图</a>
+						</li>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_dev_trigger">设备历史触发</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">
+						<i class="icon-users"></i>
+						<span class="menu-item">用户管理</span>
+						<span class="down-arrow"></span>
+					</a>
+					<ul>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_user_info">个人信息</a>
+						</li>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_son_users">子账户管理</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">
+						<i class="icon-grid2"></i>
+						<span class="menu-item">场景管理</span>
+						<span class="down-arrow"></span>
+					</a>
+					<ul>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_scene_all">全部场景</a>
+						</li>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_scene_live">实时监控</a>
+						</li>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_scene_video">历史回放</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">
+						<i class="icon-drive"></i>
+						<span class="menu-item">设备管理</span>
+						<span class="down-arrow"></span>
+					</a>
+					<ul>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_dev_info">设备信息</a>
+						</li>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="iot_trigger_info">触发器信息</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">
+						<i class="icon-cog6"></i>
+						<span class="menu-item">系统管理</span>
+						<span class="down-arrow"></span>
+					</a>
+					<ul>
+						<li>
+							<a name="tab" href='javascript:void (0)' id="sys_user_list">用户列表</a>
+						</li>
+						<li>
+							<a name="tab" href="javascript:void (0)" id="sys_service_count">服务统计</a>
+						</li>
+						<li>
+							<a name="tab" href="javascript:void (0)" id="sys_scene_list">项目列表</a>
+						</li>
+						<li>
+							<a name="tab" href="javascript:void (0)" id="sys_dev_list">设备列表</a>
+						</li>
+						<li>
+							<a name="tab" href="javascript:void (0)" id="sys_dev_store">设备仓库(未归属)</a>
+						</li>
+						<li>
+							<a name="tab" href="javascript:void (0)" id="sys_dictionary_list">数据字典</a>
+						</li>
+						<li>
+							<a name="tab" href="javascript:void (0)" id="sys_lpm_list">LPM管理</a>
+						</li>
+						<li>
+							<a name="tab" href="javascript:void (0)" id="sys_weChat_menu">微信菜单</a>
+						</li>
+						<li>
+							<a name="tab" href="javascript:void (0)" id="sys_param_setting">系统参数</a>
+						</li>
+					</ul>
+				</li>
+				<li class="sys_notify_li">
+					<a href="javascript:void (0)" id="sys_notify">
+						<i class="icon-paper-plane"></i>
+						<span class="menu-item">通知与反馈</span>
+					</a>
+				</li>
+			</ul>
+			<!-- Sidebar menu snd -->
+		</div>
+		<!-- 中间主内容 Start -->
+		<div class="dashboard-wrapper center">
+		</div>
+		<!-- 底部 Start -->
+		<footer>
+			Copyright <a href="http://www.bootstrapmb.com/">Arise</a> Admin <span>2016</span>
+		</footer>
+		<script type="text/javascript" src="commonJs.js"></script>
+		<script type="text/javascript" src="static/js/nav.js"></script>
+		<script type="text/javascript" src="static/js/iot_scene.js"></script>
+		<script type="text/javascript" src="static/js/iot_device_monitoring.js"></script>
+		<script type="text/javascript" src="static/js/iot_alarm.js"></script>
+		<script type="text/javascript" src="static/js/iot_device_history.js"></script>
+		<script type="text/javascript" src="static/js/iot_user_management.js"></script>
+		<script type="text/javascript" src="static/js/iot_scene_pro.js"></script>
+		<script type="text/javascript" src="static/js/iot_index.js"></script>
+		<script type="text/javascript" src="static/js/iot_sys_manage.js"></script>
+		<script type="text/javascript" src="static/js/iot_sys_notify.js"></script>
+		<script type="text/javascript" src="static/js/iot_device_manage.js"></script>
+	</body>
+	<script type="text/javascript">
+		//切换导航栏高亮显示
+		$(".menu li").click(function() {
+			$(this).addClass("active selected").siblings().removeClass("active selected");
+			$(this).find("li").removeClass("active selected");
+		});
+		$("a[name='tab']").click(function () {
+			$("a").removeClass("current");
+			$(this).addClass("current");
+		})
+	</script>
+</html>

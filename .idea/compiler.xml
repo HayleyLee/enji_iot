@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="web" />
+        <module name="data" />
+        <module name="cache" />
+        <module name="mqtt" />
+        <module name="util" />
+        <module name="enji_iot" />
+        <module name="develop" />
+        <module name="consumer" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cache" target="1.8" />
+      <module name="consumer" target="1.8" />
+      <module name="data" target="1.8" />
+      <module name="develop" target="1.8" />
+      <module name="enji_iot" target="1.8" />
+      <module name="mqtt" target="1.8" />
+      <module name="util" target="1.8" />
+      <module name="web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="cache" options="-parameters" />
+      <module name="consumer" options="-parameters" />
+      <module name="data" options="-parameters" />
+      <module name="develop" options="-parameters" />
+      <module name="enji_iot" options="-parameters" />
+      <module name="mqtt" options="-parameters" />
+      <module name="util" options="-parameters" />
+      <module name="web" options="-parameters" />
+    </option>
+  </component>
+</project>

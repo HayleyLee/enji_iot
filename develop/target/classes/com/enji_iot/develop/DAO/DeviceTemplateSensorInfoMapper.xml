@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.DeviceTemplateSensorInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateSensorInfoBO">
+		INSERT INTO device_template_sensor_info
+		(name,measure_unit_type,iot_sensor_type,iot_sensor_category,device_template_id,sensor_device_id,port_id,
+		seq,delete_flag,sdata_degree,formula_up,formula_down,aid,mid,data_type,param_names,param_type,param_config, infos )
+		VALUES
+		(#{deviceTemplateSensorInfo.name},
+		#{deviceTemplateSensorInfo.measure_unit_type},
+		#{deviceTemplateSensorInfo.iot_sensor_type},
+		#{deviceTemplateSensorInfo.iot_sensor_category},
+		#{deviceTemplateSensorInfo.device_template_id},
+		#{deviceTemplateSensorInfo.sensor_device_id},
+		#{deviceTemplateSensorInfo.port_id},
+		#{deviceTemplateSensorInfo.seq},
+		#{deviceTemplateSensorInfo.delete_flag},
+		#{deviceTemplateSensorInfo.sdata_degree},
+		#{deviceTemplateSensorInfo.formula_up},
+		#{deviceTemplateSensorInfo.formula_down},
+		#{deviceTemplateSensorInfo.aid},
+		#{deviceTemplateSensorInfo.mid},
+		#{deviceTemplateSensorInfo.data_type},
+		#{deviceTemplateSensorInfo.param_names},
+		#{deviceTemplateSensorInfo.param_type},
+		#{deviceTemplateSensorInfo.param_config},
+		#{deviceTemplateSensorInfo.infos})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from device_template_sensor_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateSensorInfoBO">
+		UPDATE device_template_sensor_info SET mtime=now()
+		<if test="name!=null and name !=''">
+			,name=#{deviceTemplateSensorInfo.name}
+		</if>
+		<if test="measure_unit_type!=null">
+			,measure_unit_type=#{deviceTemplateSensorInfo.measure_unit_type}
+		</if>
+		<if test="param_names != null and param_names!=''">
+			,param_names=#{deviceTemplateSensorInfo.param_names}
+		</if>
+		<if test="param_type != null">
+			,param_type=#{deviceTemplateSensorInfo.param_type}
+		</if>
+		<if test="data_type !=null ">
+			,data_type=#{deviceTemplateSensorInfo.data_type}
+		</if>
+		<if test="iot_sensor_type!=null">
+			,iot_sensor_type=#{deviceTemplateSensorInfo.iot_sensor_type}
+		</if>
+		<if test="iot_sensor_category!=null">
+			,iot_sensor_category=#{deviceTemplateSensorInfo.iot_sensor_category}
+		</if>
+		<if test="device_template_id!=null">
+			,device_template_id=#{deviceTemplateSensorInfo.device_template_id}
+		</if>
+		<if test="param_config != null and param_config !='' ">
+			,param_config=#{deviceTemplateSensorInfo.param_config}
+		</if>
+		<if test="sensor_device_id!=null">
+			,sensor_device_id=#{deviceTemplateSensorInfo.sensor_device_id}
+		</if>
+		<if test="port_id!=null">
+			,port_id=#{deviceTemplateSensorInfo.port_id}
+		</if>
+		<if test="seq!=null">
+			,seq=#{deviceTemplateSensorInfo.seq}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{deviceTemplateSensorInfo.delete_flag}
+		</if>
+		<if test="infos!= null ">
+			,infos=#{deviceTemplateSensorInfo.infos}
+		</if>
+		<if test="sdata_degree!=null">
+			,sdata_degree=#{deviceTemplateSensorInfo.sdata_degree}
+		</if>
+		<if test="formula_up!=null and formula_up !=''">
+			,formula_up=#{deviceTemplateSensorInfo.formula_up}
+		</if>
+		<if test="formula_down!=null and formula_down !=''">
+			,formula_down=#{deviceTemplateSensorInfo.formula_down}
+		</if>
+		<if test="aid!=null">
+			,aid=#{deviceTemplateSensorInfo.aid}
+		</if>
+		<if test="mid!=null">
+			,mid=#{deviceTemplateSensorInfo.mid}
+		</if>
+		WHERE id=#{deviceTemplateSensorInfo.id}
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* FROM device_template_sensor_info o
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{deviceTemplateSensorInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{deviceTemplateSensorInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name  LIKE  CONCAT("%", #{deviceTemplateSensorInfo.name},"%")
+		</if>
+		<if test="measure_unit_type!=null">
+			AND o.measure_unit_type=#{deviceTemplateSensorInfo.measure_unit_type}
+		</if>
+		<if test="iot_sensor_type!=null">
+			AND o.iot_sensor_type=#{deviceTemplateSensorInfo.iot_sensor_type}
+		</if>
+		<if test="iot_sensor_category!=null">
+			AND o.iot_sensor_category=#{deviceTemplateSensorInfo.iot_sensor_category}
+		</if>
+		<if test="device_template_id!=null">
+			AND o.device_template_id=#{deviceTemplateSensorInfo.device_template_id}
+		</if>
+		<if test="sensor_device_id!=null">
+			AND o.sensor_device_id=#{deviceTemplateSensorInfo.sensor_device_id}
+		</if>
+		<if test="port_id!=null">
+			AND o.port_id=#{deviceTemplateSensorInfo.port_id}
+		</if>
+		<if test="seq!=null">
+			AND o.seq=#{deviceTemplateSensorInfo.seq}
+		</if>
+		<if test="delete_flag!=null">
+			AND o.delete_flag=#{deviceTemplateSensorInfo.delete_flag}
+		</if>
+		<if test="sdata_degree!=null">
+			AND o.sdata_degree=#{deviceTemplateSensorInfo.sdata_degree}
+		</if>
+		<if test="formula_up!=null and formula_up !=''">
+			AND o.formula_up = #{deviceTemplateSensorInfo.formula_up}
+		</if>
+		<if test="data_type != null">
+			AND o.data_type=#{deviceTemplateSensorInfo.data_type}
+		</if>
+		<if test="param_names != null and param_names!=''">
+			AND o.param_names=#{deviceTemplateSensorInfo.param_names}
+		</if>
+		<if test="param_config !=null and param_config!=''">
+			AND o.param_config=#{deviceTemplateSensorInfo.param_config}
+		</if>
+		<if test="param_type != null" >
+			AND o.param_type=#{deviceTemplateSensorInfo.param_type}
+		</if>
+		<if test="formula_down!=null and formula_down !=''">
+			AND o.formula_down = #{deviceTemplateSensorInfo.formula_down}
+		</if>
+		<if test="aid!=null">
+			AND o.aid=#{deviceTemplateSensorInfo.aid}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{deviceTemplateSensorInfo.atime}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{deviceTemplateSensorInfo.mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{deviceTemplateSensorInfo.mtime}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.DeviceTemplateSensorInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.seq ASC , o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateSensorInfoBO">
+		SELECT COUNT(1) FROM device_template_sensor_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateSensorInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.DeviceTemplateSensorInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{deviceTemplateSensorInfo.id} LIMIT 1
+	</select>
+</mapper>

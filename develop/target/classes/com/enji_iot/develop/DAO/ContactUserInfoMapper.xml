@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.ContactUserInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.ContactUserInfoBO">
+		INSERT INTO contact_user_info
+		(name,sex,phone,email,address,user_id,delete_flag,aid,mid)
+		VALUES
+		(#{contactUserInfo.name},#{contactUserInfo.sex},#{contactUserInfo.phone},#{contactUserInfo.email},#{contactUserInfo.address},#{contactUserInfo.user_id},#{contactUserInfo.delete_flag},#{contactUserInfo.aid},#{contactUserInfo.mid})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from contact_user_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.ContactUserInfoBO">
+		UPDATE contact_user_info SET mtime=now()
+		<if test="name!=null and name !=''">
+			,name=#{contactUserInfo.name}
+		</if>
+		<if test="sex!=null and sex !=''">
+			,sex=#{contactUserInfo.sex}
+		</if>
+		<if test="phone!=null and phone !=''">
+			,phone=#{contactUserInfo.phone}
+		</if>
+		<if test="email!=null and email !=''">
+			,email=#{contactUserInfo.email}
+		</if>
+		<if test="address!=null and address !=''">
+			,address=#{contactUserInfo.address}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{contactUserInfo.delete_flag}
+		</if>
+		<if test="aid!=null">
+			,aid=#{contactUserInfo.aid}
+		</if>
+		<if test="mid!=null">
+			,mid=#{contactUserInfo.mid}
+		</if>
+		<if test="wx_key != null and wx_key != ''">
+			,wx_key=#{contactUserInfo.wx_key}
+		</if>
+		<if test="wx_img != null and wx_img != ''">
+			,wx_img=#{contactUserInfo.wx_img}
+		</if>
+		WHERE id=#{contactUserInfo.id}
+		<if test="user_id != null">
+			AND user_id =#{contactUserInfo.user_id}
+		</if>
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* FROM contact_user_info o
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{contactUserInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{contactUserInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name  LIKE  CONCAT("%", #{contactUserInfo.name},"%")
+		</if>
+		<if test="sex!=null and sex !=''">
+			AND o.sex = #{contactUserInfo.sex}
+		</if>
+		<if test="phone!=null and phone !=''">
+			AND o.phone = #{contactUserInfo.phone}
+		</if>
+		<if test="email!=null and email !=''">
+			AND o.email = #{contactUserInfo.email}
+		</if>
+		<if test="address!=null and address !=''">
+			AND o.address = #{contactUserInfo.address}
+		</if>
+		<if test="user_id!=null">
+			AND o.user_id=#{contactUserInfo.user_id}
+		</if>
+		<if test="delete_flag!=null">
+			AND o.delete_flag=#{contactUserInfo.delete_flag}
+		</if>
+		<if test="aid!=null">
+			AND o.aid=#{contactUserInfo.aid}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{contactUserInfo.atime}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{contactUserInfo.mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{contactUserInfo.mtime}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.ContactUserInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.ContactUserInfoBO">
+		SELECT COUNT(1) FROM contact_user_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.ContactUserInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.ContactUserInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{contactUserInfo.id} LIMIT 1
+	</select>
+</mapper>

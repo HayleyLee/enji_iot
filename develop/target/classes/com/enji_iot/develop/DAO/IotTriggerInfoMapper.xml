@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.IotTriggerInfoMapper">
+	<!-- 新增, 并返回id -->
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO">
+		INSERT INTO iot_trigger_info
+		(name,from_sensor_id,to_sensor_id,iot_trigger_condition_type,iot_trigger_action_type,action_params,seq,delete_flag,condition_params,iot_trigger_alarm_level,iot_trigger_alarm_flag,iot_trigger_status,trigger_inteval_time,
+		last_trigger_time,aid,mid , node_id ,node_dev_code, recovery,iot_sensor_name)
+		VALUES
+		(#{iotTriggerInfo.name},
+		#{iotTriggerInfo.from_sensor_id},
+		#{iotTriggerInfo.to_sensor_id},
+		#{iotTriggerInfo.iot_trigger_condition_type},
+		#{iotTriggerInfo.iot_trigger_action_type},
+		#{iotTriggerInfo.action_params},
+		#{iotTriggerInfo.seq},
+		#{iotTriggerInfo.delete_flag},
+		#{iotTriggerInfo.condition_params},
+		#{iotTriggerInfo.iot_trigger_alarm_level},
+		#{iotTriggerInfo.iot_trigger_alarm_flag},
+		#{iotTriggerInfo.iot_trigger_status},
+		#{iotTriggerInfo.trigger_inteval_time},
+		#{iotTriggerInfo.last_trigger_time},
+		#{iotTriggerInfo.aid},
+		#{iotTriggerInfo.mid},
+		#{iotTriggerInfo.node_id},
+		#{iotTriggerInfo.node_dev_code},
+		#{iotTriggerInfo.recovery},
+		#{iotTriggerInfo.iot_sensor_name})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_trigger_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO">
+		UPDATE iot_trigger_info SET mtime=now()
+		<if test="iotTriggerInfo.name!=null and iotTriggerInfo.name !=''">
+			,name=#{iotTriggerInfo.name}
+		</if>
+		<if test="iotTriggerInfo.node_dev_code!=null">
+			,node_dev_code=#{iotTriggerInfo.node_dev_code}
+		</if>
+		<if test="iotTriggerInfo.iot_sensor_name!=null">
+			,iot_sensor_name=#{iotTriggerInfo.iot_sensor_name}
+		</if>
+		<if test="iotTriggerInfo.iot_trigger_condition_type!=null">
+			,iot_trigger_condition_type=#{iotTriggerInfo.iot_trigger_condition_type}
+		</if>
+		<if test="iotTriggerInfo.iot_trigger_action_type!=null ">
+			,iot_trigger_action_type=#{iotTriggerInfo.iot_trigger_action_type}
+		</if>
+		<if test="iotTriggerInfo.action_params!=null ">
+			,action_params=#{iotTriggerInfo.action_params}
+		</if>
+		<if test="iotTriggerInfo.seq!=null">
+			,seq=#{iotTriggerInfo.seq}
+		</if>
+		<if test="iotTriggerInfo.delete_flag!=null">
+			,delete_flag=#{iotTriggerInfo.delete_flag}
+		</if>
+		<if test="iotTriggerInfo.condition_params!=null and iotTriggerInfo.condition_params !=''">
+			,condition_params=#{iotTriggerInfo.condition_params}
+		</if>
+		<if test="iotTriggerInfo.iot_trigger_alarm_level!=null">
+			,iot_trigger_alarm_level=#{iotTriggerInfo.iot_trigger_alarm_level}
+		</if>
+		<if test="iotTriggerInfo.iot_trigger_alarm_flag!=null">
+			,iot_trigger_alarm_flag=#{iotTriggerInfo.iot_trigger_alarm_flag}
+		</if>
+		<if test="iotTriggerInfo.iot_trigger_status!=null">
+			,iot_trigger_status=#{iotTriggerInfo.iot_trigger_status}
+		</if>
+		<if test="iotTriggerInfo.trigger_inteval_time!=null">
+			,trigger_inteval_time=#{iotTriggerInfo.trigger_inteval_time}
+		</if>
+		<if test="iotTriggerInfo.last_trigger_time!=null">
+			,last_trigger_time=#{iotTriggerInfo.last_trigger_time}
+		</if>
+		<if test="iotTriggerInfo.node_id != null">
+			,node_id =#{iotTriggerInfo.node_id}
+		</if>
+		<if test="iotTriggerInfo.aid!=null">
+			,aid=#{iotTriggerInfo.aid}
+		</if>
+		<if test="iotTriggerInfo.recovery !=null">
+			,recovery=#{iotTriggerInfo.recovery}
+		</if>
+		<if test="iotTriggerInfo.mid!=null">
+			,mid=#{iotTriggerInfo.mid}
+		</if>
+		WHERE id=#{iotTriggerInfo.id}
+		<!--<if test="user_id !=null">-->
+		<!--AND from_sensor_id IN ( SELECT id FROM iot_sensor_info WHERE node_id IN ( SELECT id FROM iot_node_info  -->
+		<!--WHERE scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotTriggerInfo.user_id} )  ) )-->
+		<!--</if>-->
+	</update>
+	<!-- 检索记录字段 -->
+	<sql id="sql_select_field">
+		SELECT o.* ,t.name AS from_sensor_name , t.node_id as node_id FROM iot_trigger_info o LEFT JOIN iot_sensor_info t ON o.from_sensor_id = t.id
+	</sql>
+	<!-- 检索记录条件 -->
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="iotTriggerInfo.id_array!=null">
+			AND o.id IN
+			<foreach collection="iotTriggerInfo.id_array" index="index" item="item" open="(" separator="," close=")">
+				#{iotTriggerInfo.item}
+			</foreach>
+		</if>
+		<if test="iotTriggerInfo.id!=null">
+			AND o.id=#{iotTriggerInfo.id}
+		</if>
+		<if test="iotTriggerInfo.name!=null and iotTriggerInfo.name !=''">
+			AND o.name  LIKE CONCAT("%", #{iotTriggerInfo.name},"%")
+		</if>
+		<if test="iotTriggerInfo.node_id != null">
+			AND o.node_id=#{iotTriggerInfo.node_id}
+		</if>
+		<if test="iotTriggerInfo.scene_id != null">
+			AND o.node_id IN (SELECT id FROM iot_node_info WHERE scene_id = #{iotTriggerInfo.scene_id}  )
+		</if>
+		<if test="iotTriggerInfo.iot_sensor_name!=null">
+			AND o.iot_sensor_name LIKE CONCAT("%", #{iotTriggerInfo.iot_sensor_name},"%")
+		</if>
+		<if test="iotTriggerInfo.node_dev_code!=null">
+			AND o.node_dev_code=#{iotTriggerInfo.node_dev_code}
+		</if>
+		<!--<if test="user_id !=null">-->
+		<!--AND o.from_sensor_id IN ( SELECT id FROM iot_sensor_info WHERE node_id IN ( SELECT id FROM iot_node_info  -->
+		<!--WHERE scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotTriggerInfo.user_id} )  ) )-->
+		<!--</if>-->
+		<if test="iotTriggerInfo.iot_trigger_condition_type!=null">
+			AND o.iot_trigger_condition_type=#{iotTriggerInfo.iot_trigger_condition_type}
+		</if>
+		<if test="iotTriggerInfo.iot_trigger_action_type!=null and iotTriggerInfo.iot_trigger_action_type !=''">
+			AND o.iot_trigger_action_type = #{iotTriggerInfo.iot_trigger_action_type}
+		</if>
+		<if test="iotTriggerInfo.action_params!=null and iotTriggerInfo.action_params !=''">
+			AND o.action_params = #{iotTriggerInfo.action_params}
+		</if>
+		<if test="iotTriggerInfo.seq!=null">
+			AND o.seq=#{iotTriggerInfo.seq}
+		</if>
+		<if test="iotTriggerInfo.delete_flag!=null">
+			AND o.delete_flag=#{iotTriggerInfo.delete_flag}
+		</if>
+		<if test="iotTriggerInfo.condition_params!=null and iotTriggerInfo.condition_params !=''">
+			AND o.condition_params = #{iotTriggerInfo.condition_params}
+		</if>
+		<if test="iotTriggerInfo.iot_trigger_alarm_level!=null">
+			AND o.iot_trigger_alarm_level=#{iotTriggerInfo.iot_trigger_alarm_level}
+		</if>
+		<if test="iotTriggerInfo.iot_trigger_alarm_flag!=null">
+			AND o.iot_trigger_alarm_flag=#{iotTriggerInfo.iot_trigger_alarm_flag}
+		</if>
+		<if test="iotTriggerInfo.iot_trigger_status!=null">
+			AND o.iot_trigger_status=#{iotTriggerInfo.iot_trigger_status}
+		</if>
+		<if test="iotTriggerInfo.trigger_inteval_time!=null">
+			AND o.trigger_inteval_time=#{iotTriggerInfo.trigger_inteval_time}
+		</if>
+		<if test="iotTriggerInfo.last_trigger_time!=null">
+			AND o.last_trigger_time=#{iotTriggerInfo.last_trigger_time}
+		</if>
+		<if test="iotTriggerInfo.aid!=null">
+			AND o.aid=#{iotTriggerInfo.aid}
+		</if>
+		<if test="iotTriggerInfo.atime!=null">
+			AND o.atime=#{iotTriggerInfo.atime}
+		</if>
+		<if test="iotTriggerInfo.mid!=null">
+			AND o.mid=#{iotTriggerInfo.mid}
+		</if>
+		<if test="iotTriggerInfo.mtime!=null">
+			AND o.mtime=#{iotTriggerInfo.mtime}
+		</if>
+	</sql>
+	<!-- 检索记录数量 -->
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO">
+		SELECT COUNT(1) FROM iot_trigger_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<!-- 检索记录 -->
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{iotTriggerInfo.id} LIMIT 1
+	</select>
+	<!-- 检索记录列表 -->
+	<select id="select" parameterType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+	</select>
+	<!--删除触发器-->
+	<delete id="deleteData" parameterType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO">
+		DELETE FROM iot_trigger_info WHERE node_id = #{iotTriggerInfo.node_id}
+	</delete>
+
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotTriggerInfoBO">
+		select count(*) from iot_trigger_info where node_id = #{iotTriggerInfo.node_id};
+	</select>
+</mapper>

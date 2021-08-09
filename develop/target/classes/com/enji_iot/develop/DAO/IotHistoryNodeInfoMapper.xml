@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.IotHistoryNodeInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO">
+		INSERT INTO iot_history_node_data
+		(scene_id,device_code,name,val,unit,time)
+		VALUES
+		(#{iotHistoryNodeInfo.scene_id},#{iotHistoryNodeInfo.device_code},#{iotHistoryNodeInfo.name},#{iotHistoryNodeInfo.val},#{iotHistoryNodeInfo.unit},#{iotHistoryNodeInfo.time})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_history_node_data ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<select id="selectHistoryNodeData" parameterType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO" resultType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO">
+		SELECT * FROM iot_history_node_data WHERE 1=1
+		<if test="iotHistoryNodeInfo.scene_id!=null">AND scene_id = #{iotHistoryNodeInfo.scene_id}</if>
+		<if test="iotHistoryNodeInfo.device_code!=null">AND device_code = #{iotHistoryNodeInfo.device_code}</if>
+		<if test="iotHistoryNodeInfo.name!=null">AND name = #{iotHistoryNodeInfo.name}</if>
+		<if test="iotHistoryNodeInfo.start_time !=null">AND time >= #{iotHistoryNodeInfo.start_time}</if>
+		<if test="iotHistoryNodeInfo.end_time !=null">	AND time &lt;= #{iotHistoryNodeInfo.end_time}</if>
+		ORDER BY id DESC
+		<if test="startPage !=null and endPage!=null">LIMIT ${pageBean.startPage},${pageBean.endPage}</if>
+	</select>
+	<select id="selectHistoryNodeCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO">
+		SELECT count(*) FROM iot_history_node_data WHERE 1=1
+		<if test="iotHistoryNodeInfo.scene_id!=null">AND scene_id = #{iotHistoryNodeInfo.scene_id}</if>
+		<if test="iotHistoryNodeInfo.device_code!=null">AND device_code = #{iotHistoryNodeInfo.device_code}</if>
+		<if test="iotHistoryNodeInfo.name!=null">AND name = #{iotHistoryNodeInfo.name}</if>
+		<if test="iotHistoryNodeInfo.start_time !=null">AND time >= #{iotHistoryNodeInfo.start_time}</if>
+		<if test="iotHistoryNodeInfo.end_time !=null">	AND time &lt;= #{iotHistoryNodeInfo.end_time}</if>
+	</select>
+</mapper>

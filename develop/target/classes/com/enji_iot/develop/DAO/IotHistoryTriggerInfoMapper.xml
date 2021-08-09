@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.IotHistoryTriggerInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotHistoryTriggerInfoBO">
+		INSERT INTO iot_history_trigger_info
+		(node_id,unit,val,description,name,iot_sensor_name,iot_trigger_condition_type,iot_trigger_action_type,action_params,condition_params,iot_trigger_alarm_level,iot_trigger_alarm_flag,trigger_inteval_time,aid,trigger_value)
+		VALUES
+		(#{iotHistoryTriggerInfo.node_id},#{iotHistoryTriggerInfo.unit},#{iotHistoryTriggerInfo.val},#{iotHistoryTriggerInfo.description},#{iotHistoryTriggerInfo.name},#{iotHistoryTriggerInfo.iot_sensor_name},#{iotHistoryTriggerInfo.iot_trigger_condition_type},#{iotHistoryTriggerInfo.iot_trigger_action_type},#{iotHistoryTriggerInfo.action_params},#{iotHistoryTriggerInfo.condition_params},#{iotHistoryTriggerInfo.iot_trigger_alarm_level},#{iotHistoryTriggerInfo.iot_trigger_alarm_flag},#{iotHistoryTriggerInfo.trigger_inteval_time},#{iotHistoryTriggerInfo.aid},#{iotHistoryTriggerInfo.trigger_value})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_history_trigger_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.IotHistoryTriggerInfoBO">
+		UPDATE iot_history_trigger_info SET mtime=now()
+		<if test="sdata!=null">
+			,sdata=#{iotHistoryTriggerInfo.sdata}
+		</if>
+		<if test="description!=null and description !=''">
+			,description=#{iotHistoryTriggerInfo.description}
+		</if>
+		<if test="name!=null and name !=''">
+			,name=#{iotHistoryTriggerInfo.name}
+		</if>
+		<if test="from_sensor_id!=null">
+			,from_sensor_id=#{iotHistoryTriggerInfo.from_sensor_id}
+		</if>
+		<if test="to_sensor_id!=null">
+			,to_sensor_id=#{iotHistoryTriggerInfo.to_sensor_id}
+		</if>
+		<if test="iot_trigger_condition_type!=null">
+			,iot_trigger_condition_type=#{iotHistoryTriggerInfo.iot_trigger_condition_type}
+		</if>
+		<if test="iot_trigger_action_type!=null and iot_trigger_action_type !=''">
+			,iot_trigger_action_type=#{iotHistoryTriggerInfo.iot_trigger_action_type}
+		</if>
+		<if test="action_params!=null and action_params !=''">
+			,action_params=#{iotHistoryTriggerInfo.action_params}
+		</if>
+		<if test="condition_params!=null and condition_params !=''">
+			,condition_params=#{iotHistoryTriggerInfo.condition_params}
+		</if>
+		<if test="iot_trigger_alarm_level!=null">
+			,iot_trigger_alarm_level=#{iotHistoryTriggerInfo.iot_trigger_alarm_level}
+		</if>
+		<if test="iot_trigger_alarm_flag!=null">
+			,iot_trigger_alarm_flag=#{iotHistoryTriggerInfo.iot_trigger_alarm_flag}
+		</if>
+		<if test="trigger_inteval_time!=null">
+			,trigger_inteval_time=#{iotHistoryTriggerInfo.trigger_inteval_time}
+		</if>
+		<if test="aid!=null">
+			,aid=#{iotHistoryTriggerInfo.aid}
+		</if>
+		WHERE id=#{iotHistoryTriggerInfo.id}
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* FROM iot_history_trigger_info o
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{iotHistoryTriggerInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{iotHistoryTriggerInfo.id}
+		</if>
+		<if test="val!=null">
+			AND o.val=#{iotHistoryTriggerInfo.val}
+		</if>
+		<if test="description!=null and description !=''">
+			AND o.description = #{iotHistoryTriggerInfo.description}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name = #{iotHistoryTriggerInfo.name}
+		</if>
+		<!--		<if test="from_sensor_id!=null">-->
+		<!--			AND o.from_sensor_id=#{iotHistoryTriggerInfo.from_sensor_id}-->
+		<!--		</if>-->
+		<if test="node_id !=null">
+			AND o.node_id =#{iotHistoryTriggerInfo.node_id}
+		</if>
+		<if test="scene_id != null">
+			AND node_id IN ( SELECT id FROM iot_node_info WHERE scene_id = #{iotHistoryTriggerInfo.scene_id} )
+		</if>
+		<!--		<if test="to_sensor_id!=null">-->
+		<!--			AND o.to_sensor_id=#{iotHistoryTriggerInfo.to_sensor_id}-->
+		<!--		</if>-->
+		<if test="iot_trigger_condition_type!=null">
+			AND o.iot_trigger_condition_type=#{iotHistoryTriggerInfo.iot_trigger_condition_type}
+		</if>
+		<if test="iot_trigger_action_type!=null and iot_trigger_action_type !=''">
+			AND o.iot_trigger_action_type = #{iotHistoryTriggerInfo.iot_trigger_action_type}
+		</if>
+		<if test="action_params!=null and action_params !=''">
+			AND o.action_params = #{iotHistoryTriggerInfo.action_params}
+		</if>
+		<if test="condition_params!=null and condition_params !=''">
+			AND o.condition_params = #{iotHistoryTriggerInfo.condition_params}
+		</if>
+		<if test="iot_trigger_alarm_level!=null">
+			AND o.iot_trigger_alarm_level=#{iotHistoryTriggerInfo.iot_trigger_alarm_level}
+		</if>
+		<if test="iot_trigger_alarm_flag!=null">
+			AND o.iot_trigger_alarm_flag=#{iotHistoryTriggerInfo.iot_trigger_alarm_flag}
+		</if>
+		<if test="trigger_inteval_time!=null">
+			AND o.trigger_inteval_time=#{iotHistoryTriggerInfo.trigger_inteval_time}
+		</if>
+		<if test="aid!=null">
+			AND o.aid=#{iotHistoryTriggerInfo.aid}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{iotHistoryTriggerInfo.atime}
+		</if>
+		<if test="start_time !=null">
+			AND o.atime >= #{iotHistoryTriggerInfo.start_time}
+		</if>
+		<if test="end_time !=null">
+			AND o.atime &lt;= #{iotHistoryTriggerInfo.end_time}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.IotHistoryTriggerInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotHistoryTriggerInfoBO">
+		SELECT COUNT(1) FROM iot_history_trigger_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.IotHistoryTriggerInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotHistoryTriggerInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{iotHistoryTriggerInfo.id} LIMIT 1
+	</select>
+	<!-- 检索记录列表 -->
+	<select id="select" parameterType="com.enji_iot.util.Entity.bo.IotHistoryTriggerInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotHistoryTriggerInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+	</select>
+</mapper>

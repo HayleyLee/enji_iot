@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.data.DAO.IotScreenAlarmInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO">
+		INSERT INTO iot_alarm_info
+		(description,node_id,iot_trigger_alarm_level,sdata,iot_alarm_process_status,aid,mid,name,alarm_sdata)
+		VALUES
+		(#{iotAlarmInfo.description},#{iotAlarmInfo.node_id},#{iotAlarmInfo.iot_trigger_alarm_level},#{iotAlarmInfo.sdata},#{iotAlarmInfo.iot_alarm_process_status},#{iotAlarmInfo.aid},#{iotAlarmInfo.mid},#{iotAlarmInfo.name},#{iotAlarmInfo.alarm_sdata})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_alarm_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO">
+		UPDATE iot_alarm_info SET mtime=now()
+		<if test="description!=null and description !=''">
+			,description=#{iotAlarmInfo.description}
+		</if>
+		<if test="node_id!=null">
+			,node_id=#{iotAlarmInfo.node_id}
+		</if>
+		<if test="iot_trigger_alarm_level!=null">
+			,iot_trigger_alarm_level=#{iotAlarmInfo.iot_trigger_alarm_level}
+		</if>
+		<if test="sdata!=null">
+			,sdata=#{iotAlarmInfo.sdata}
+		</if>
+		<if test="iot_alarm_process_status!=null">
+			,iot_alarm_process_status=#{iotAlarmInfo.iot_alarm_process_status}
+		</if>
+		<if test="aid!=null">
+			,aid=#{iotAlarmInfo.aid}
+		</if>
+		<if test="mid!=null">
+			,mid=#{iotAlarmInfo.mid}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{iotAlarmInfo.delete_flag}
+		</if>
+		WHERE id=#{iotAlarmInfo.id}
+		<if test="user_id !=null">
+			AND node_id IN ( SELECT id FROM iot_node_info WHERE
+			scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotAlarmInfo.user_id} )
+			)
+		</if>
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* ,t.name AS sensor_name, node.name AS node_name ,date_format( o.atime, '%Y-%m-%d %H:%i:%s') AS atimestr
+			FROM iot_alarm_info o LEFT JOIN iot_sensor_info t ON o.node_id = t.id
+			LEFT JOIN iot_node_info node ON t.node_id = node.id
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{iotAlarmInfo.id}
+		</if>
+		<if test="description!=null and description !=''">
+			AND o.description = #{iotAlarmInfo.description}
+		</if>
+		<if test="node_id!=null">
+			AND o.node_id=#{iotAlarmInfo.node_id}
+		</if>
+		<if test="iot_trigger_alarm_level!=null">
+			AND o.iot_trigger_alarm_level=#{iotAlarmInfo.iot_trigger_alarm_level}
+		</if>
+		<if test="sdata!=null">
+			AND o.sdata=#{iotAlarmInfo.sdata}
+		</if>
+		<if test="iot_alarm_process_status!=null">
+			AND o.iot_alarm_process_status=#{iotAlarmInfo.iot_alarm_process_status}
+		</if>
+		<if test="node_name !=null and node_name !=''">
+			AND o.node_id IN ( SELECT id FROM iot_node_info WHERE name LIKE  CONCAT("%", #{iotAlarmInfo.node_name},"%") )
+		</if>
+		<if test="scene_id != null">
+			AND o.node_id IN (SELECT id FROM iot_node_info WHERE scene_id = #{iotAlarmInfo.scene_id} )
+		</if>
+		<if test="user_id != null">
+			AND  o.node_id IN (
+			SELECT id FROM iot_node_info WHERE
+			scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotAlarmInfo.user_id} )
+			)
+		</if>
+		<if test="delete_flag !=null">
+			AND o.delete_flag=#{iotAlarmInfo.delete_flag}
+		</if>
+		<if test="aid!=null">
+			AND o.aid=#{iotAlarmInfo.aid}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{iotAlarmInfo.atime}
+		</if>
+		<if test="start_time !=null and start_time!=''">
+			AND o.atime >= #{iotAlarmInfo.start_time}
+		</if>
+		<if test="end_time !=null and end_time!=''">
+			AND o.atime &lt;= #{iotAlarmInfo.end_time}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{iotAlarmInfo.mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{iotAlarmInfo.mtime}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.data.DAO.Base_DATA_Mapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO">
+		SELECT COUNT(1) FROM iot_alarm_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO" resultType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{iotAlarmInfo.id} LIMIT 1
+	</select>
+	<select id="selectStatisticInfo" parameterType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO"  resultType="com.enji_iot.util.Entity.bo.IotStatisticBO" >
+		SELECT COUNT(1) AS num ,iot_alarm_process_status AS statistic_type
+		FROM iot_alarm_info
+		WHERE 1=1
+		<if test="scene_id != null">
+			AND node_id IN ( SELECT id FROM iot_node_info WHERE scene_id = #{iotAlarmInfo.scene_id} )
+		</if>
+		<if test="user_id != null">
+			AND  node_id IN (
+			SELECT id FROM iot_node_info WHERE
+			scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotAlarmInfo.user_id} )
+			)
+		</if>
+		<if test="start_time !=null and start_time!=''">
+			AND atime >= #{iotAlarmInfo.start_time}
+		</if>
+		GROUP BY iot_alarm_process_status
+	</select>
+	<select id="selectAll" parameterType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+	</select>
+</mapper>

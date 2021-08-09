@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.DeviceTemplateTriggerInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateTiggerInfoBO">
+		INSERT INTO device_template_tigger_info
+		(name,from_sensor_id,to_sensor_id,iot_trigger_condition_type,iot_trigger_action_type,action_params,seq,delete_flag,condition_params,iot_trigger_alarm_level,iot_trigger_alarm_flag,trigger_inteval_time,aid,mid,device_template_id)
+		VALUES
+		(#{deviceTemplateTriggerInfo.name},
+		#{deviceTemplateTriggerInfo.from_sensor_id},
+		#{deviceTemplateTriggerInfo.to_sensor_id},
+		#{deviceTemplateTriggerInfo.iot_trigger_condition_type},
+		#{deviceTemplateTriggerInfo.iot_trigger_action_type},
+		#{deviceTemplateTriggerInfo.action_params},
+		#{deviceTemplateTriggerInfo.seq},
+		#{deviceTemplateTriggerInfo.delete_flag},
+		#{deviceTemplateTriggerInfo.condition_params},
+		#{deviceTemplateTriggerInfo.iot_trigger_alarm_level},
+		#{deviceTemplateTriggerInfo.iot_trigger_alarm_flag},
+		#{deviceTemplateTriggerInfo.trigger_inteval_time},
+		#{deviceTemplateTriggerInfo.aid},
+		#{deviceTemplateTriggerInfo.mid},
+		#{deviceTemplateTriggerInfo.device_template_id})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from device_template_tigger_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateTiggerInfoBO">
+		UPDATE device_template_tigger_info SET mtime=now()
+		<if test="name!=null and name !=''">
+			,name=#{deviceTemplateTriggerInfo.name}
+		</if>
+		<if test="from_sensor_id!=null">
+			,from_sensor_id=#{deviceTemplateTriggerInfo.from_sensor_id}
+		</if>
+		<if test="to_sensor_id!=null">
+			,to_sensor_id=#{deviceTemplateTriggerInfo.to_sensor_id}
+		</if>
+		<if test="iot_trigger_condition_type!=null">
+			,iot_trigger_condition_type=#{deviceTemplateTriggerInfo.iot_trigger_condition_type}
+		</if>
+		<if test="iot_trigger_action_type!=null and iot_trigger_action_type !=''">
+			,iot_trigger_action_type=#{deviceTemplateTriggerInfo.iot_trigger_action_type}
+		</if>
+		<if test="action_params!=null and action_params !=''">
+			,action_params=#{deviceTemplateTriggerInfo.action_params}
+		</if>
+		<if test="seq!=null">
+			,seq=#{deviceTemplateTriggerInfo.seq}
+		</if>
+		<if test="device_template_id != null">
+			,device_template_id=#{deviceTemplateTriggerInfo.device_template_id}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{deviceTemplateTriggerInfo.delete_flag}
+		</if>
+		<if test="condition_params!=null and condition_params !=''">
+			,condition_params=#{deviceTemplateTriggerInfo.condition_params}
+		</if>
+		<if test="iot_trigger_alarm_level!=null">
+			,iot_trigger_alarm_level=#{deviceTemplateTriggerInfo.iot_trigger_alarm_level}
+		</if>
+		<if test="iot_trigger_alarm_flag!=null">
+			,iot_trigger_alarm_flag=#{deviceTemplateTriggerInfo.iot_trigger_alarm_flag}
+		</if>
+		<if test="trigger_inteval_time!=null">
+			,trigger_inteval_time=#{deviceTemplateTriggerInfo.trigger_inteval_time}
+		</if>
+		<if test="aid!=null">
+			,aid=#{deviceTemplateTriggerInfo.aid}
+		</if>
+		<if test="mid!=null">
+			,mid=#{deviceTemplateTriggerInfo.mid}
+		</if>
+		WHERE id=#{deviceTemplateTriggerInfo.id}
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* ,t.name AS from_sensor_name FROM device_template_tigger_info o LEFT JOIN device_template_sensor_info t ON o.from_sensor_id = t.id
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{deviceTemplateTriggerInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{deviceTemplateTriggerInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name  LIKE  CONCAT("%", #{deviceTemplateTriggerInfo.name},"%")
+		</if>
+		<if test="from_sensor_id!=null">
+			AND o.from_sensor_id=#{deviceTemplateTriggerInfo.from_sensor_id}
+		</if>
+		<if test="device_template_id != null">
+			AND o.device_template_id =#{deviceTemplateTriggerInfo.device_template_id}
+		</if>
+		<if test="to_sensor_id!=null">
+			AND o.to_sensor_id=#{deviceTemplateTriggerInfo.to_sensor_id}
+		</if>
+		<if test="iot_trigger_condition_type!=null">
+			AND o.iot_trigger_condition_type=#{deviceTemplateTriggerInfo.iot_trigger_condition_type}
+		</if>
+		<if test="iot_trigger_action_type!=null and iot_trigger_action_type !=''">
+			AND o.iot_trigger_action_type = #{deviceTemplateTriggerInfo.iot_trigger_action_type}
+		</if>
+		<if test="action_params!=null and action_params !=''">
+			AND o.action_params = #{deviceTemplateTriggerInfo.action_params}
+		</if>
+		<if test="seq!=null">
+			AND o.seq=#{deviceTemplateTriggerInfo.seq}
+		</if>
+		<if test="delete_flag!=null">
+			AND o.delete_flag=#{deviceTemplateTriggerInfo.delete_flag}
+		</if>
+		<if test="condition_params!=null and condition_params !=''">
+			AND o.condition_params = #{deviceTemplateTriggerInfo.condition_params}
+		</if>
+		<if test="iot_trigger_alarm_level!=null">
+			AND o.iot_trigger_alarm_level=#{deviceTemplateTriggerInfo.iot_trigger_alarm_level}
+		</if>
+		<if test="iot_trigger_alarm_flag!=null">
+			AND o.iot_trigger_alarm_flag=#{deviceTemplateTriggerInfo.iot_trigger_alarm_flag}
+		</if>
+		<if test="trigger_inteval_time!=null">
+			AND o.trigger_inteval_time=#{deviceTemplateTriggerInfo.trigger_inteval_time}
+		</if>
+		<if test="aid!=null">
+			AND o.aid=#{deviceTemplateTriggerInfo.aid}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{deviceTemplateTriggerInfo.atime}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{deviceTemplateTriggerInfo.mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{deviceTemplateTriggerInfo.mtime}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.DeviceTemplateTiggerInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateTiggerInfoBO">
+		SELECT COUNT(1) FROM device_template_tigger_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.DeviceTemplateTiggerInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.DeviceTemplateTiggerInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{deviceTemplateTriggerInfo.id} LIMIT 1
+	</select>
+</mapper>

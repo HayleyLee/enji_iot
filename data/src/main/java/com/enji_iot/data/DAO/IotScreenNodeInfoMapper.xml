@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.data.DAO.IotScreenNodeInfoMapper">
+
+	<resultMap id="nodeBO" type="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		<id property="id" column="node_id" />
+		<result property="name" column="node_name" />
+		<result property="device_code" column="device_code" />
+		<result property="atime" column="node_atime" />
+		<result property="template_id" column="template_id" />
+		<result property="template_name" column="template_name" />
+		<result property="iot_node_status" column="iot_node_status" />
+		<result property="iot_protocal_category" column="iot_protocal_category" />
+		<result property="infos" column="deviceinfos" />
+		<result property="frequency" column="frequency" />
+		<collection property="iotSensorList" resultMap="sensorBoList" />
+	</resultMap>
+
+	<resultMap id="sensorBoList" type="com.enji_iot.util.Entity.bo.IotSensorInfoBO">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="infos" column="infos" />
+		<result property="measure_unit_type" column="measure_unit_type" />
+		<result property="iot_sensor_type" column="iot_sensor_type" />
+		<result property="iot_sensor_category" column="iot_sensor_category" />
+		<result property="node_id" column="node_id" />
+		<result property="param_type" column="param_type" />
+		<result property="sensor_device_id" column="sensor_device_id" />
+		<result property="port_id" column="port_id" />
+		<result property="sdata" column="sdata" />
+		<result property="data_type" column="data_type" />
+		<result property="str_sdata" column="str_sdata" />
+		<result property="seq" column="seq" />
+		<result property="iot_sensor_status" column="iot_sensor_status" />
+		<result property="register_time" column="register_time" />
+		<result property="atime" column="atime" />
+		<result property="mtime" column="mtime" />
+	</resultMap>
+	<!-- 检索记录字段 -->
+	<sql id="sql_select_field">
+		SELECT o.* , ic.name AS scene_name, us.name AS user_name FROM iot_node_info o LEFT JOIN iot_scene_info ic ON o.scene_id = ic.id  LEFT JOIN user_info us ON ic.user_id = us.id
+	</sql>
+	<!-- 检索记录条件 -->
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{iotNodeInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{iotNodeInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name LIKE CONCAT("%", #{iotNodeInfo.name},"%")
+		</if>
+		<if test="device_code!=null and device_code !='' ">
+			AND o.device_code LIKE CONCAT("%", #{iotNodeInfo.device_code},"%")
+		</if>
+		<if test="iot_node_type!=null">
+			AND o.iot_node_type=#{iotNodeInfo.iot_node_type}
+		</if>
+		<if test="iot_protocal_category!=null and iot_protocal_category !='' ">
+			AND o.iot_protocal_category=#{iotNodeInfo.iot_protocal_category}
+		</if>
+		<if test="seq!=null">
+			AND o.seq=#{iotNodeInfo.seq}
+		</if>
+		<if test="scene_id!=null">
+			AND o.scene_id=#{iotNodeInfo.scene_id}
+		</if>
+		<if test="delete_flag!=null">
+			AND o.delete_flag=#{iotNodeInfo.delete_flag}
+		</if>
+		<if test="user_id !=null">
+			AND  o.scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotNodeInfo.user_id} )
+		</if>
+		<if test="iot_node_status!=null">
+			AND o.iot_node_status=#{iotNodeInfo.iot_node_status}
+		</if>
+		<if test="img_id!=null">
+			AND o.img_id=#{iotNodeInfo.img_id}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{iotNodeInfo.atime}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{iotNodeInfo.mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{iotNodeInfo.mtime}
+		</if>
+		<!-- 		<if test="aid !=null"> -->
+		<!-- 			OR o.aid =#{aid} -->
+		<!-- 		</if> -->
+	</sql>
+
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		INSERT INTO iot_node_info
+		(name,device_code,iot_node_type,iot_protocal_category,seq,scene_id,delete_flag,iot_node_status,img_id,aid,mid,template_id,lonLat,infos,frequency,
+		measure_unit_type,iot_node_data_type,store_strage,formula_up,formula_down,disable_flag)
+		VALUES
+		(#{iotNodeInfo.name},
+		#{iotNodeInfo.device_code},
+		#{iotNodeInfo.iot_node_type},
+		#{iotNodeInfo.iot_protocal_category},
+		#{iotNodeInfo.seq},
+		#{iotNodeInfo.scene_id},
+		#{iotNodeInfo.delete_flag},
+		#{iotNodeInfo.iot_node_status},
+		#{iotNodeInfo.img_id},
+		#{iotNodeInfo.aid},
+		#{iotNodeInfo.mid},
+		#{iotNodeInfo.template_id},
+		#{iotNodeInfo.lonLat},
+		#{iotNodeInfo.infos},
+		#{iotNodeInfo.frequency},
+		#{iotNodeInfo.measure_unit_type},
+		#{iotNodeInfo.iot_node_data_type},
+		#{iotNodeInfo.store_strage},
+		#{iotNodeInfo.formula_up},
+		#{iotNodeInfo.formula_down},
+		#{iotNodeInfo.disable_flag})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_node_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		UPDATE iot_node_info SET mtime=now()
+		<if test="name!=null and name !=''">
+			,name =#{iotNodeInfo.name}
+		</if>
+		<if test="device_code!=null">
+			,device_code=#{iotNodeInfo.device_code}
+		</if>
+		<if test="iot_node_type!=null">
+			,iot_node_type=#{iotNodeInfo.iot_node_type}
+		</if>
+		<if test="iot_protocal_category!=null and iot_protocal_category !=''">
+			,iot_protocal_category=#{iotNodeInfo.iot_protocal_category}
+		</if>
+		<if test="seq!=null">
+			,seq=#{iotNodeInfo.seq}
+		</if>
+		<if test="scene_id!=null">
+			,scene_id=#{iotNodeInfo.scene_id}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{iotNodeInfo.delete_flag}
+		</if>
+		<if test="iot_node_status!=null">
+			,iot_node_status=#{iotNodeInfo.iot_node_status}
+		</if>
+		<if test="frequency != null">
+			,frequency=#{iotNodeInfo.frequency}
+		</if>
+		<if test="infos!=null">
+			,infos=#{iotNodeInfo.infos}
+		</if>
+		<if test="lonLat != null and lonLat !='' ">
+			,lonLat=#{iotNodeInfo.lonLat}
+		</if>
+		<if test="img_id!=null">
+			,img_id=#{iotNodeInfo.img_id}
+		</if>
+		<if test="aid!=null">
+			,aid=#{iotNodeInfo.aid}
+		</if>
+		<if test="mid!=null">
+			,mid=#{iotNodeInfo.mid}
+		</if>
+		<if test="measure_unit_type!=null">
+			,measure_unit_type=#{iotNodeInfo.measure_unit_type}
+		</if>
+		<if test="iot_node_data_type!=null">
+			,iot_node_data_type=#{iotNodeInfo.iot_node_data_type}
+		</if>
+		<if test="store_strage!=null">
+			,store_strage=#{iotNodeInfo.store_strage}
+		</if>
+		<if test="formula_up!=null">
+			,formula_up=#{iotNodeInfo.formula_up}
+		</if>
+		<if test="formula_down!=null">
+			,formula_down=#{iotNodeInfo.formula_down}
+		</if>
+		<if test="disable_flag!=null">
+			,disable_flag=#{iotNodeInfo.disable_flag}
+		</if>
+		WHERE id=#{iotNodeInfo.id}
+		<if test="user_id != null">
+			AND scene_id  IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotNodeInfo.user_id} )
+		</if>
+	</update>
+
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.seq ASC , o.id ASC
+		<include refid="com.enji_iot.data.DAO.Base_DATA_Mapper.sql_limit_condition" />
+	</select>
+	<!--统计所有或者项目下，设备在线情况  -->
+	<select id="selectStatisticNodeInfo"  parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotStatisticBO">
+		SELECT COUNT(1) AS num , iot_node_status AS statistic_type FROM iot_node_info
+		WHERE 1=1
+		<if test="scene_id!=null">
+			AND scene_id=#{iotNodeInfo.scene_id}
+		</if>
+		<if test="user_id !=null">
+			AND  scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotNodeInfo.user_id} )
+		</if>
+		GROUP BY iot_node_status
+	</select>
+	<!-- 检索记录数量 -->
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		SELECT COUNT(1) FROM iot_node_info o
+		<include refid="sql_select_condition" />
+	</select>
+
+	<select id="selectUnUsedNode" resultType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		SELECT o.* FROM iot_node_info o
+		WHERE o.delete_flag=0
+		AND o.scene_id is NULL
+		<if test="device_code!=null and device_code !='' ">
+			AND o.device_code LIKE CONCAT("%", #{iotNodeInfo.device_code},"%")
+		</if>
+		ORDER BY o.id ASC
+		<include refid="com.enji_iot.data.DAO.Base_DATA_Mapper.sql_limit_condition" />
+	</select>
+	<!-- 检索记录 -->
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{iotNodeInfo.id} LIMIT 1
+	</select>
+
+	<select id="selectNodeUnitList"  parameterType="com.enji_iot.util.Entity.bo.IotNodeUnitDataBO"
+			resultType="com.enji_iot.util.Entity.bo.IotNodeUnitDataBO">
+		SELECT * FROM iot_node_unit_data WHERE 1=1
+		<if test="scene_id!=null">
+			and scene_id=#{iotNodeUnitData.scene_id}
+		</if>
+		<if test="device_code!=null">
+			and device_code=#{iotNodeUnitData.device_code}
+		</if>
+	</select>
+</mapper>

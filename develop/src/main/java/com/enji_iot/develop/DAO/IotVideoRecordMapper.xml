@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.IotVideoRecordMapper">
+    <!-- 新增, 并返回id -->
+    <insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotVideoRecordBO">
+        INSERT INTO iot_video_record
+        (video_id,name)
+        VALUES
+        (#{iotVideoRecord.video_id},#{iotVideoRecord.name})
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            select id from iot_video_record ORDER BY id desc LIMIT 1
+        </selectKey>
+    </insert>
+    <!-- 修改 -->
+    <update id="update" parameterType="com.enji_iot.util.Entity.bo.IotVideoRecordBO">
+        UPDATE iot_video_record SET mtime=now()
+        <if test="video_id!=null">
+            ,video_id=#{iotVideoRecord.video_id}
+        </if>
+        <if test="name!=null and name !=''">
+            ,name=#{iotVideoRecord.name}
+        </if>
+        WHERE id=#{iotVideoRecord.id}
+    </update>
+    <!-- 检索记录字段 -->
+    <sql id="sql_select_field">
+		SELECT o.* FROM iot_video_record o 
+	</sql>
+    <!-- 检索记录条件 -->
+    <sql id="sql_select_condition">
+        WHERE 1=1
+        <if test="id_array!=null">
+            AND o.id IN
+            <foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+                #{iotVideoRecord.item}
+            </foreach>
+        </if>
+        <if test="id!=null">
+            AND o.id=#{iotVideoRecord.id}
+        </if>
+        <if test="video_id!=null">
+            AND o.video_id=#{iotVideoRecord.video_id}
+        </if>
+        <if test="name!=null and name !=''">
+            AND o.name = #{iotVideoRecord.name}
+        </if>
+        <if test="start_date!=null">
+            AND o.atime >= #{iotVideoRecord.start_date}
+        </if>
+        <if test="end_date!=null">
+            AND o.atime &lt;= #{iotVideoRecord.end_date}
+        </if>
+        <if test="atime!=null">
+            AND o.atime=#{iotVideoRecord.atime}
+        </if>
+    </sql>
+    <!-- 检索记录列表 -->
+    <select id="selectPage" resultType="com.enji_iot.util.Entity.bo.IotVideoRecordBO">
+        <include refid="sql_select_field" />
+        <include refid="sql_select_condition" />
+        ORDER BY o.id DESC
+        <include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+    </select>
+    <!-- 检索记录数量 -->
+    <select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotVideoRecordBO">
+        SELECT COUNT(1) FROM iot_video_record o
+        <include refid="sql_select_condition" />
+    </select>
+    <!-- 检索记录 -->
+    <select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.IotVideoRecordBO"
+            resultType="com.enji_iot.util.Entity.bo.IotVideoRecordBO">
+        <include refid="sql_select_field"/>
+        WHERE o.id=#{iotVideoRecord.id} LIMIT 1
+    </select>
+</mapper>

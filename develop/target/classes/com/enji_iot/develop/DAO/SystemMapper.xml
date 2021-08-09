@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.SystemMapper">
+	<select id="selectHistoryInfo" resultType="com.enji_iot.util.Entity.bean.TableSystem" parameterType="com.enji_iot.util.Entity.bean.TableSystem" >
+		SELECT TABLE_NAME as table_name FROM information_schema.TABLES WHERE
+			TABLE_NAME LIKE '%iot_history_sensor_data%'
+			AND table_schema= #{tableSystem.db_name}
+	</select>
+	<select id="selectHistoryCount" parameterType="com.enji_iot.util.Entity.bean.TableSystem" resultType="java.lang.Integer" statementType="STATEMENT" >
+		SELECT COUNT(1) as num FROM iot_history_sensor_data_${tableSystem.table_index}
+	</select>
+	<update id="createHistoryTable" parameterType="com.enji_iot.util.Entity.bean.TableSystem" statementType="STATEMENT">
+		CREATE TABLE iot_history_sensor_data_${tableSystem.table_index} LIKE iot_history_sensor_data_1;
+	</update>
+	<update id="modifyHistoryTable" parameterType="com.enji_iot.util.Entity.bean.TableSystem" statementType="STATEMENT">
+		ALTER TABLE iot_history_sensor_data  UNION(${tableSystem.table_names})  ;
+	</update>
+</mapper>

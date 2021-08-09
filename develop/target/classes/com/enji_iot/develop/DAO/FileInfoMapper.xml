@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.FileInfoMapper">
+	<!-- 新增, 并返回id -->
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.FileInfoBO">
+		INSERT INTO file_info
+		(name,fix,size,delete_flag,add_id,add_time,file_path)
+		VALUES
+		(#{fileInfo.name},#{fileInfo.fix},#{fileInfo.size},#{fileInfo.delete_flag},#{fileInfo.add_id},#{fileInfo.add_time},#{fileInfo.file_path})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from file_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.FileInfoBO">
+		UPDATE file_info SET mtime=now()
+		<if test="name!=null and name !=''">
+			,name=#{fileInfo.name}
+		</if>
+		<if test="fix!=null and fix !=''">
+			,fix=#{fileInfo.fix}
+		</if>
+		<if test="size!=null">
+			,size=#{fileInfo.size}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{fileInfo.delete_flag}
+		</if>
+		<if test="add_id!=null">
+			,add_id=#{fileInfo.add_id}
+		</if>
+		<if test="add_time!=null">
+			,add_time=#{fileInfo.add_time}
+		</if>
+		WHERE id=#{fileInfo.id}
+	</update>
+
+	<!-- 检索记录 -->
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.FileInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.FileInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{fileInfo.id} LIMIT 1
+	</select>
+
+	<!-- 检索记录字段 -->
+	<sql id="sql_select_field">
+		SELECT o.* FROM file_info o
+	</sql>
+
+	<!-- 检索记录条件 -->
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{fileInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{fileInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name = #{fileInfo.name}
+		</if>
+		<if test="fix!=null and fix !=''">
+			AND o.fix = #{fileInfo.fix}
+		</if>
+		<if test="size!=null">
+			AND o.size=#{fileInfo.size}
+		</if>
+		<if test="delete_flag!=null">
+			AND o.delete_flag=#{fileInfo.delete_flag}
+		</if>
+		<if test="add_id!=null">
+			AND o.add_id=#{fileInfo.add_id}
+		</if>
+		<if test="add_time!=null">
+			AND o.add_time=#{fileInfo.add_time}
+		</if>
+	</sql>
+	<!-- 检索记录列表 -->
+	<select id="selectList" parameterType="com.enji_iot.util.Entity.bo.FileInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.FileInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+	</select>
+
+	<!-- 检索记录列表 -->
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.FileInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+
+	<!-- 检索记录数量 -->
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.FileInfoBO">
+		SELECT COUNT(1) FROM file_info o
+		<include refid="sql_select_condition" />
+	</select>
+</mapper>

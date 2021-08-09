@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.AlarmTriggerStatisticsMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerStatisticBO">
+		INSERT INTO alarm_trigger_statistic
+		(user_id,trigger_type,num)
+		VALUES
+		(#{alarmTriggerStatistic.user_id},#{alarmTriggerStatistic.trigger_type},#{alarmTriggerStatistic.num})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from alarm_trigger_statistic ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerStatisticBO">
+		UPDATE alarm_trigger_statistic SET mtime=now()
+		<if test="user_id!=null">
+			,user_id=#{alarmTriggerStatistic.user_id}
+		</if>
+		<if test="trigger_type!=null">
+			,trigger_type=#{alarmTriggerStatistic.trigger_type}
+		</if>
+		<if test="num!=null">
+			,num=#{alarmTriggerStatistic.num}
+		</if>
+		WHERE id=#{alarmTriggerStatistic.id}
+	</update>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.AlarmTriggerStatisticBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerStatisticBO">
+		SELECT COUNT(1) FROM alarm_trigger_statistic o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerStatisticBO"
+			resultType="com.enji_iot.util.Entity.bo.AlarmTriggerStatisticBO">
+		<include refid="sql_select_field" />
+		WHERE o.id=#{alarmTriggerStatistic.id} LIMIT 1
+	</select>
+
+	<sql id="sql_select_field">
+		SELECT o.* FROM alarm_trigger_statistic o
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{alarmTriggerStatistic.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{alarmTriggerStatistic.id}
+		</if>
+		<if test="user_id!=null">
+			AND o.user_id=#{alarmTriggerStatistic.user_id}
+		</if>
+		<if test="trigger_type!=null">
+			AND o.trigger_type=#{alarmTriggerStatistic.trigger_type}
+		</if>
+		<if test="num!=null">
+			AND o.num=#{alarmTriggerStatistic.num}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{alarmTriggerStatistic.atime}
+		</if>
+	</sql>
+</mapper>

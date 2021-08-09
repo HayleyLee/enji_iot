@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.SysConfigInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.SysConfigInfoBO">
+		INSERT INTO sys_config_info
+		(name,value,remark)
+		VALUES
+		(#{sysConfigInfo.name},#{sysConfigInfo.value},#{sysConfigInfo.remark})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from sys_config_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.SysConfigInfoBO">
+		UPDATE sys_config_info SET id=id
+		<if test="name!=null and name !=''">
+			,name=#{sysConfigInfo.name}
+		</if>
+		<if test="value!=null and value !=''">
+			,value=#{sysConfigInfo.value}
+		</if>
+		<if test="remark!=null and remark !=''">
+			,remark=#{sysConfigInfo.remark}
+		</if>
+		WHERE id=#{sysConfigInfo.id}
+	</update>
+	<sql id="sql_select_field">
+		SELECT o.* FROM sys_config_info o
+	</sql>
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{sysConfigInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{sysConfigInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name = #{sysConfigInfo.name}
+		</if>
+		<if test="value!=null and value !=''">
+			AND o.value = #{sysConfigInfo.value}
+		</if>
+		<if test="remark!=null and remark !=''">
+			AND o.remark = #{sysConfigInfo.remark}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{sysConfigInfo.atime}
+		</if>
+	</sql>
+	<select id="selectPage" resultType="com.enji_iot.util.Entity.bo.SysConfigInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.SysConfigInfoBO">
+		SELECT COUNT(1) FROM sys_config_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.SysConfigInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.SysConfigInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{sysConfigInfo.id} LIMIT 1
+	</select>
+</mapper>

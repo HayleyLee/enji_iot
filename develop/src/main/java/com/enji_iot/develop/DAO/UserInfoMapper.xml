@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.UserInfoMapper">
+	<!-- 检索记录条件 -->
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="id!=null">
+			AND o.id=#{userInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name  LIKE  CONCAT("%", #{userInfo.name},"%")
+		</if>
+		<if test="password!=null and password !=''">
+			AND o.password = #{userInfo.password}
+		</if>
+		<if test="phone!=null and phone !=''">
+			AND o.phone = #{userInfo.phone}
+		</if>
+		<if test="email!=null and email !=''">
+			AND o.email =#{userInfo.email}
+		</if>
+		<if test="user_key!=null and user_key !=''">
+			AND o.user_key =#{userInfo.user_key}
+		</if>
+		<if test="nick_name!=null and nick_name !=''">
+			AND o.nick_name =#{userInfo.nick_name}
+		</if>
+		<if test="real_name!=null and real_name !=''">
+			AND o.real_name =#{userInfo.real_name}
+		</if>
+		<if test="id_no!=null and id_no !=''">
+			AND o.id_no = #{userInfo.id_no}
+		</if>
+		<if test="type!=null">
+			AND o.type=#{userInfo.type}
+		</if>
+		<if test="status!=null">
+			AND o.status=#{userInfo.status}
+		</if>
+		<if test="sex!=null">
+			AND o.sex=#{userInfo.sex}
+		</if>
+		<if test="img_id!=null">
+			AND o.img_id=#{userInfo.img_id}
+		</if>
+		<if test="remark!=null and remark !=''">
+			AND o.remark =#{userInfo.remark}
+		</if>
+		<if test="register_time!=null">
+			AND o.register_time=#{userInfo.register_time}
+		</if>
+		<if test="wp_id !=null and wp_id !=''">
+			AND o.wp_id =#{userInfo.wp_id}
+		</if>
+		<if test="wx_open_id!=null and wx_open_id !=''">
+			AND o.wx_open_id =#{userInfo.wx_open_id}
+		</if>
+		<if test="validate_code!=null and validate_code !=''">
+			AND o.validate_code =#{userInfo.validate_code}
+		</if>
+		<if test="validate_time!=null">
+			AND o.validate_time=#{userInfo.validate_time}
+		</if>
+		<if test="aid !=null">
+			AND o.aid=#{userInfo.aid}
+		</if>
+		<if test="delete_flag !=null">
+			AND o.delete_flag =#{userInfo.delete_flag}
+		</if>
+	</sql>
+	<!-- 检索记录字段 -->
+	<sql id="sql_select_field">
+		SELECT o.* , ua.sms_num , ua.voice_num FROM user_info o LEFT JOIN user_account_info ua ON o.id = ua.user_id
+	</sql>
+	<!-- 检索记录数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.UserInfoBO">
+		SELECT COUNT(1) FROM user_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<!-- 检索记录 -->
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.UserInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.UserInfoBO">
+		<include refid="sql_select_field"/>
+		<include refid="sql_select_condition" />
+		LIMIT 1
+	</select>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.UserInfoBO">
+		UPDATE user_info SET id=id
+		<if test="name!=null and name !=''">
+			,name=#{userInfo.name}
+		</if>
+		<if test="password!=null and password !=''">
+			,password=#{userInfo.password}
+		</if>
+		<if test="phone!=null and phone !=''">
+			,phone=#{userInfo.phone}
+		</if>
+		<if test="wx_img_url != null and wx_img_url !=''">
+			,wx_img_url=#{userInfo.wx_img_url}
+		</if>
+		<if test="email!=null and email !=''">
+			,email=#{userInfo.email}
+		</if>
+		<if test="user_key!=null and user_key !=''">
+			,user_key=#{userInfo.user_key}
+		</if>
+		<if test="nick_name!=null and nick_name !=''">
+			,nick_name=#{userInfo.nick_name}
+		</if>
+		<if test="real_name!=null and real_name !=''">
+			,real_name=#{userInfo.real_name}
+		</if>
+		<if test="id_no!=null and id_no !=''">
+			,id_no=#{userInfo.id_no}
+		</if>
+		<if test="type!=null">
+			,type=#{userInfo.type}
+		</if>
+		<if test="status!=null">
+			,status=#{userInfo.status}
+		</if>
+		<if test="sex!=null">
+			,sex=#{userInfo.sex}
+		</if>
+		<if test="img_id!=null">
+			,img_id=#{userInfo.img_id}
+		</if>
+		<if test="remark!=null and remark !=''">
+			,remark=#{userInfo.remark}
+		</if>
+		<if test="register_time!=null">
+			,register_time=#{userInfo.register_time}
+		</if>
+		<if test="wx_open_id!=null and wx_open_id !=''">
+			,wx_open_id=#{userInfo.wx_open_id}
+		</if>
+		<if test="wp_id !=null and wp_id !=''">
+			,wp_id=#{userInfo.wp_id}
+		</if>
+		<if test="validate_code!=null and validate_code !=''">
+			,validate_code=#{userInfo.validate_code}
+		</if>
+		<if test="validate_time!=null">
+			,validate_time=#{userInfo.validate_time}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{userInfo.delete_flag}
+		</if>
+		WHERE id=#{userInfo.id}
+		<if test="aid !=null">
+			AND aid=#{userInfo.aid}
+		</if>
+	</update>
+
+	<!-- 新增, 并返回id -->
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.UserInfoBO">
+		INSERT INTO user_info
+		(name,password,phone,email,user_key,nick_name,real_name,id_no,type,status,sex,img_id,remark,register_time,wx_open_id,validate_code,validate_time,aid)
+		VALUES
+		(#{userInfo.name},#{userInfo.password},#{userInfo.phone},#{userInfo.email},#{userInfo.user_key},#{userInfo.nick_name},#{userInfo.real_name},#{userInfo.id_no},#{userInfo.type},#{userInfo.status},#{userInfo.sex},#{userInfo.img_id},#{userInfo.remark},#{userInfo.register_time},#{userInfo.wx_open_id},#{userInfo.validate_code},#{userInfo.validate_time},#{userInfo.aid})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from user_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<update id="updatePassword" parameterType="com.enji_iot.util.Entity.bo.UserInfoBO">
+		UPDATE user_info SET password=#{userInfo.password} WHERE id=#{userInfo.id} AND email=#{userInfo.email}
+	</update>
+	<update id="updatePasswordByKey" parameterType="com.enji_iot.util.Entity.bo.UserInfoBO">
+		UPDATE user_info SET password=#{userInfo.password} WHERE user_key=#{userInfo.user_key}
+	</update>
+
+	<sql id="sql_select_field_ADD_subacout_num">
+		SELECT o.* , ( SELECT COUNT(1) FROM iot_scene_user_relation ics where ics.user_id = o.id ) scene_num  FROM user_info o
+	</sql>
+
+	<select id="selectOneLogin" parameterType="com.enji_iot.util.Entity.bo.UserInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.UserInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE  o.name =#{userInfo.name}
+		AND o.password = #{userInfo.password}
+		LIMIT 1
+	</select>
+
+	<select id="select" resultType="com.enji_iot.util.Entity.bo.UserInfoBO">
+		<if test="scene_num_flag != null and scene_num_flag == 1">
+			<include refid="sql_select_field_ADD_subacout_num" />
+		</if>
+		<if test="scene_num_flag == null ">
+			<include refid="sql_select_field" />
+		</if>
+		<include refid="sql_select_condition" />
+		ORDER BY o.id DESC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+</mapper>

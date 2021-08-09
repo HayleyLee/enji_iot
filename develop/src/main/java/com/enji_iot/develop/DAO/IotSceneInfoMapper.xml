@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.IotSceneInfoMapper">
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotSceneInfoBO">
+		INSERT INTO iot_scene_info
+		(name,pid,user_id,delete_flag,lon,lat,description,iot_scene_type,guard_status,remark,seq,aid,mid,img_id,province,province_code,city,city_code)
+		VALUES
+		(#{iotSceneInfo.name},#{iotSceneInfo.pid},#{iotSceneInfo.user_id},#{iotSceneInfo.delete_flag},#{iotSceneInfo.lon},#{iotSceneInfo.lat},#{iotSceneInfo.description},#{iotSceneInfo.iot_scene_type},#{iotSceneInfo.guard_status},#{iotSceneInfo.remark},#{iotSceneInfo.seq},#{iotSceneInfo.aid},#{iotSceneInfo.mid},#{iotSceneInfo.img_id},#{iotSceneInfo.province},#{iotSceneInfo.province_code},#{iotSceneInfo.city},#{iotSceneInfo.city_code} )
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_scene_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<!-- 修改 -->
+	<update id="update" parameterType="com.enji_iot.util.Entity.bo.IotSceneInfoBO">
+		UPDATE iot_scene_info SET mtime=now()
+		<if test="name!=null and name !=''">
+			,name=#{iotSceneInfo.name}
+		</if>
+		<if test="pid!=null">
+			,pid=#{iotSceneInfo.pid}
+		</if>
+		<if test="user_id!=null">
+			,user_id=#{iotSceneInfo.user_id}
+		</if>
+		<if test="delete_flag!=null">
+			,delete_flag=#{iotSceneInfo.delete_flag}
+		</if>
+		<if test="lon!=null">
+			,lon=#{iotSceneInfo.lon}
+		</if>
+		<if test="lat!=null">
+			,lat=#{iotSceneInfo.lat}
+		</if>
+		<if test="description!=null and description !=''">
+			,description=#{iotSceneInfo.description}
+		</if>
+		<if test="iot_scene_type!=null">
+			,iot_scene_type=#{iotSceneInfo.iot_scene_type}
+		</if>
+		<if test="img_id !=null and img_id!=''">
+			,img_id=#{iotSceneInfo.img_id}
+		</if>
+		<if test="guard_status!=null">
+			,guard_status=#{iotSceneInfo.guard_status}
+		</if>
+		<if test="remark!=null and remark !=''">
+			,remark=#{iotSceneInfo.remark}
+		</if>
+		<if test="seq!=null">
+			,seq=#{iotSceneInfo.seq}
+		</if>
+		<if test="aid!=null">
+			,aid=#{iotSceneInfo.aid}
+		</if>
+		<if test="mid!=null">
+			,mid=#{iotSceneInfo.mid}
+		</if>
+		<if test="province!=null">
+			,province=#{iotSceneInfo.province}
+		</if>
+		<if test="province_code!=null">
+			,province_code=#{iotSceneInfo.province_code}
+		</if>
+		<if test="city!=null">
+			,city=#{iotSceneInfo.city}
+		</if>
+		<if test="city_code!=null">
+			,city_code=#{iotSceneInfo.city_code}
+		</if>
+		WHERE id=#{iotSceneInfo.id}
+		<if test="user_id !=null">
+			AND id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotSceneInfo.user_id}  )
+		</if>
+	</update>
+	<!-- 检索记录字段 -->
+	<sql id="sql_select_field">
+		SELECT o.* FROM iot_scene_info o
+	</sql>
+	<!-- 检索记录条件 -->
+	<sql id="sql_select_condition">
+		WHERE 1=1
+		<if test="iotSceneInfo.id!=null">
+			AND o.id=#{iotSceneInfo.id}
+		</if>
+		<if test="iotSceneInfo.is_parent != null">
+			AND o.pid IS NULL
+		</if>
+		<if test="iotSceneInfo.name!=null and iotSceneInfo.name !=''">
+			AND o.name LIKE CONCAT("%", #{iotSceneInfo.name},"%")
+		</if>
+		<if test="iotSceneInfo.user_id!=null">
+			AND o.id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotSceneInfo.user_id} )
+		</if>
+		<if test="iotSceneInfo.pid!=null">
+			AND o.pid=#{iotSceneInfo.pid}
+		</if>
+		<if test="iotSceneInfo.delete_flag!=null">
+			AND o.delete_flag=#{iotSceneInfo.delete_flag}
+		</if>
+		<if test="iotSceneInfo.lon!=null">
+			AND o.lon=#{iotSceneInfo.lon}
+		</if>
+		<if test="iotSceneInfo.lat!=null">
+			AND o.lat=#{iotSceneInfo.lat}
+		</if>
+		<if test="iotSceneInfo.description!=null and iotSceneInfo.description !=''">
+			AND o.description = #{iotSceneInfo.description}
+		</if>
+		<if test="iotSceneInfo.iot_scene_type!=null">
+			AND o.iot_scene_type=#{iotSceneInfo.iot_scene_type}
+		</if>
+		<if test="iotSceneInfo.guard_status!=null">
+			AND o.guard_status=#{iotSceneInfo.guard_status}
+		</if>
+		<if test="iotSceneInfo.remark!=null and remark !=''">
+			AND o.remark = #{iotSceneInfo.remark}
+		</if>
+		<if test="iotSceneInfo.seq!=null">
+			AND o.seq=#{iotSceneInfo.seq}
+		</if>
+		<if test="iotSceneInfo.aid!=null">
+			AND o.aid=#{iotSceneInfo.aid}
+		</if>
+		<if test="iotSceneInfo.atime!=null">
+			AND o.atime=#{iotSceneInfo.atime}
+		</if>
+		<if test="iotSceneInfo.mid!=null">
+			AND o.mid=#{iotSceneInfo.mid}
+		</if>
+		<if test="iotSceneInfo.mtime!=null">
+			AND o.mtime=#{iotSceneInfo.mtime}
+		</if>
+	</sql>
+
+	<!-- 检索记录数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotSceneInfoBO">
+		SELECT COUNT(1) FROM iot_scene_info o
+		<include refid="sql_select_condition" />
+	</select>
+	<select id="sceneCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotSceneInfoBO">
+		SELECT COUNT(1) FROM iot_scene_info where user_id=#{iotSceneInfo.user_id}
+	</select>
+
+	<select id="selectSceneDetail" parameterType="com.enji_iot.util.Entity.bo.IotSceneInfoBO" resultType="com.enji_iot.util.Entity.bo.OtherBO" >
+		SELECT
+			( select count(1) from iot_node_info where scene_id =#{iotSceneInfo.id} and iot_node_status =16) AS online_device_num ,
+			( select count(1) from iot_node_info where scene_id =#{iotSceneInfo.id}  ) AS all_device_num ,
+			( select count(1) from iot_alarm_info where sensor_id IN ( SELECT id FROM iot_sensor_info WHERE
+				 node_id IN ( SELECT id FROM iot_node_info WHERE scene_id = #{iotSceneInfo.id} ) )
+				 AND DATEDIFF(atime,NOW())=0 ) AS all_alarm_num ,
+		  ( select count(1) from iot_alarm_info where
+		sensor_id IN ( SELECT id FROM iot_sensor_info WHERE node_id IN ( SELECT id FROM iot_node_info WHERE scene_id = #{iotSceneInfo.id} ) )
+		AND DATEDIFF(atime,NOW())=0
+		and iot_alarm_process_status = 46 ) AS unsolve_alarm_num
+	</select>
+	<!-- 检索记录列表 -->
+	<select id="select" resultType="com.enji_iot.util.Entity.bo.IotSceneInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.seq ASC , o.id ASC
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<!-- 检索记录列表 -->
+	<select id="selects" parameterType="com.enji_iot.util.Entity.bo.IotSceneInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotSceneInfoBO">
+		<include refid="sql_select_field" />
+		<include refid="sql_select_condition" />
+		ORDER BY o.seq ASC , o.id ASC
+	</select>
+	<select id="selectSceneInfo" resultType="com.enji_iot.util.Entity.bo.IotSceneInfoBO">
+		SELECT o.* , ( select count(1) from iot_node_info where scene_id=o.id and delete_flag =0 ) as device_num ,
+		( SELECT count(1) FROM iot_alarm_info WHERE
+		delete_flag=0 AND iot_alarm_process_status =46 AND sensor_id IN (
+		select id from iot_sensor_info where node_id IN ( SELECT id FROM iot_node_info WHERE scene_id = o.id ) )
+		) as unread_alarm
+		FROM iot_scene_info o
+		<include refid="sql_select_condition" />
+		ORDER BY o.seq ASC , o.id asc
+		<include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+	</select>
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.IotSceneInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.IotSceneInfoBO">
+		<include refid="sql_select_field"/>
+		WHERE o.id=#{iotSceneInfo.id}
+		<if test="user_id !=null">
+			AND id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotSceneInfo.user_id}  )
+		</if>
+		LIMIT 1
+	</select>
+</mapper>

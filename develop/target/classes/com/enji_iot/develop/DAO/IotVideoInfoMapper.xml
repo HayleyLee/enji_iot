@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.IotVideoInfoMapper">
+    <!-- 新增, 并返回id -->
+    <insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotVideoInfoBO">
+        INSERT INTO iot_video_info
+        (name,scene_id,status,image_id,delete_flag,video_type,seq,relate_id,
+        rtmp_url_high,rtmp_url_common,hls_url,aid,mid,app_name,
+        username,password,ip,port,codectype,channel,subtype)
+        VALUES
+        (#{iotVideoInfo.name},
+        #{iotVideoInfo.scene_id},
+        #{iotVideoInfo.status},
+        #{iotVideoInfo.image_id},
+        #{iotVideoInfo.delete_flag},
+        #{iotVideoInfo.video_type},
+        #{iotVideoInfo.seq},
+        #{iotVideoInfo.relate_id},
+        #{iotVideoInfo.rtmp_url_high},
+        #{iotVideoInfo.rtmp_url_common},
+        #{iotVideoInfo.hls_url},
+        #{iotVideoInfo.aid},
+        #{iotVideoInfo.mid},
+        #{iotVideoInfo.app_name},
+        #{iotVideoInfo.username},
+        #{iotVideoInfo.password},
+        #{iotVideoInfo.ip},
+        #{iotVideoInfo.port},
+        #{iotVideoInfo.codectype},
+        #{iotVideoInfo.channel},
+        #{iotVideoInfo.subtype})
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            select id from iot_video_info ORDER BY id desc LIMIT 1
+        </selectKey>
+    </insert>
+    <!-- 修改 -->
+    <update id="update" parameterType="com.enji_iot.util.Entity.bo.IotVideoInfoBO">
+        UPDATE iot_video_info SET mtime=now()
+        <if test="name!=null and name !=''">
+            ,name=#{iotVideoInfo.name}
+        </if>
+        <if test="scene_id!=null">
+            ,scene_id=#{iotVideoInfo.scene_id}
+        </if>
+        <if test="status!=null">
+            ,status=#{iotVideoInfo.status}
+        </if>
+        <if test="image_id!=null">
+            ,image_id=#{iotVideoInfo.image_id}
+        </if>
+        <if test="delete_flag!=null">
+            ,delete_flag=#{iotVideoInfo.delete_flag}
+        </if>
+        <if test="video_type!=null">
+            ,video_type=#{iotVideoInfo.video_type}
+        </if>
+        <if test="seq!=null">
+            ,seq=#{iotVideoInfo.seq}
+        </if>
+        <if test="relate_id!=null">
+            ,relate_id=#{iotVideoInfo.relate_id}
+        </if>
+        <if test="app_name!=null and app_name!=''">
+            ,app_name=#{iotVideoInfo.app_name}
+        </if>
+        <if test=" username!=null and username!=''">
+            ,username =#{iotVideoInfo.username}
+        </if>
+        <if test=" password!=null and password!=''">
+            , password=#{iotVideoInfo.password}
+        </if>
+        <if test=" ip!=null and ip!=''">
+            , ip=#{iotVideoInfo.ip}
+        </if>
+        <if test=" port!=null and port!=''">
+            ,port =#{iotVideoInfo.port}
+        </if>
+        <if test=" codectype!=null and codectype!=''">
+            , codectype=#{iotVideoInfo.codectype}
+        </if>
+        <if test=" channel!=null and channel!=''">
+            , channel=#{iotVideoInfo.channel}
+        </if>
+        <if test=" subtype!=null and subtype!=''">
+            ,subtype =#{iotVideoInfo.subtype}
+        </if>
+        <if test="rtmp_url_high!=null and rtmp_url_high !=''">
+            ,rtmp_url_high=#{iotVideoInfo.rtmp_url_high}
+        </if>
+        <if test="rtmp_url_common!=null and rtmp_url_common !=''">
+            ,rtmp_url_common=#{iotVideoInfo.rtmp_url_common}
+        </if>
+        <if test="hls_url!=null and hls_url !=''">
+            ,hls_url=#{iotVideoInfo.hls_url}
+        </if>
+        <if test="aid!=null">
+            ,aid=#{iotVideoInfo.aid}
+        </if>
+        <if test="mid!=null">
+            ,mid=#{iotVideoInfo.mid}
+        </if>
+        WHERE id=#{iotVideoInfo.id}
+    </update>
+    <!-- 检索记录字段 -->
+    <sql id="sql_select_field">
+		SELECT o.*,s.name AS scene_name FROM iot_video_info o LEFT JOIN iot_scene_info s ON o.scene_id = s.id
+	</sql>
+    <!-- 检索记录条件 -->
+    <sql id="sql_select_condition">
+        WHERE 1=1
+        <if test="id_array!=null">
+            AND o.id IN
+            <foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+                #{iotVideoInfo.item}
+            </foreach>
+        </if>
+        <if test="id!=null">
+            AND o.id=#{iotVideoInfo.id}
+        </if>
+        <if test="name!=null and name !=''">
+            AND o.name like concat("%", #{iotVideoInfo.name},"%")
+        </if>
+        <if test="scene_id!=null">
+            AND o.scene_id=#{iotVideoInfo.scene_id}
+        </if>
+        <if test="status!=null">
+            AND o.status=#{iotVideoInfo.status}
+        </if>
+        <if test="image_id!=null">
+            AND o.image_id=#{iotVideoInfo.image_id}
+        </if>
+        <if test="app_name !=null and app_name!=''">
+            AND o.app_name like concat("%", #{iotVideoInfo.app_name},"%")
+        </if>
+        <if test="delete_flag!=null">
+            AND o.delete_flag=#{iotVideoInfo.delete_flag}
+        </if>
+        <if test="video_type!=null">
+            AND o.video_type=#{iotVideoInfo.video_type}
+        </if>
+        <if test="seq!=null">
+            AND o.seq=#{iotVideoInfo.seq}
+        </if>
+        <if test="relate_id!=null">
+            AND o.relate_id=#{iotVideoInfo.relate_id}
+        </if>
+        <if test="rtmp_url_high!=null and rtmp_url_high !=''">
+            AND o.rtmp_url_high = #{iotVideoInfo.rtmp_url_high}
+        </if>
+        <if test="rtmp_url_common!=null and rtmp_url_common !=''">
+            AND o.rtmp_url_common = #{iotVideoInfo.rtmp_url_common}
+        </if>
+        <if test="hls_url!=null and hls_url !=''">
+            AND o.hls_url = #{iotVideoInfo.hls_url}
+        </if>
+        <if test="user_id !=null">
+            AND  o.scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{iotVideoInfo.user_id} )
+        </if>
+        <if test="aid!=null">
+            AND o.aid=#{iotVideoInfo.aid}
+        </if>
+        <if test="mid!=null">
+            AND o.mid=#{iotVideoInfo.mid}
+        </if>
+    </sql>
+    <!-- 检索记录列表 -->
+    <select id="selectPage" resultType="com.enji_iot.util.Entity.bo.IotVideoInfoBO">
+        <include refid="sql_select_field" />
+        <include refid="sql_select_condition" />
+        ORDER BY o.id DESC
+        <include refid="com.enji_iot.develop.DAO.BaseDevelopMapper.sql_limit_condition" />
+    </select>
+    <!-- 检索记录数量 -->
+    <select id="selectPageCount" resultType="java.lang.Integer" parameterType="com.enji_iot.util.Entity.bo.IotVideoInfoBO">
+        SELECT COUNT(1) FROM iot_video_info o
+        <include refid="sql_select_condition" />
+    </select>
+    <!-- 检索记录 -->
+    <select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.IotVideoInfoBO"
+            resultType="com.enji_iot.util.Entity.bo.IotVideoInfoBO">
+        <include refid="sql_select_field"/>
+        WHERE o.id=#{iotVideoInfo.id} LIMIT 1
+    </select>
+</mapper>

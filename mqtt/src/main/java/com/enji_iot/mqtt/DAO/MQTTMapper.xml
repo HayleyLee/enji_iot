@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.mqtt.DAO.MQTTMapper">
+
+	<insert id="insertIotHistoryTriggerInfo" parameterType="com.enji_iot.util.Entity.bo.IotHistoryTriggerInfoBO">
+		INSERT INTO iot_history_trigger_info
+		(node_id,unit,val,description,name,iot_sensor_name,iot_trigger_condition_type,iot_trigger_action_type,action_params,condition_params,iot_trigger_alarm_level,iot_trigger_alarm_flag,trigger_inteval_time,aid,trigger_value)
+		VALUES
+		(#{historyTriggerInfo.node_id},#{historyTriggerInfo.unit},#{historyTriggerInfo.val},#{historyTriggerInfo.description},#{historyTriggerInfo.name},#{historyTriggerInfo.iot_sensor_name},#{historyTriggerInfo.iot_trigger_condition_type},#{historyTriggerInfo.iot_trigger_action_type},#{historyTriggerInfo.action_params},#{historyTriggerInfo.condition_params},#{historyTriggerInfo.iot_trigger_alarm_level},#{historyTriggerInfo.iot_trigger_alarm_flag},#{historyTriggerInfo.trigger_inteval_time},#{historyTriggerInfo.aid},#{historyTriggerInfo.trigger_value})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_history_trigger_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+
+	<insert id="insertIotHistoryNodeData" parameterType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO">
+		INSERT INTO iot_history_node_data
+		(scene_id,device_code,name,val,unit,time)
+		VALUES
+		(#{historyNodeData.scene_id},#{historyNodeData.device_code},#{historyNodeData.name},#{historyNodeData.val},#{historyNodeData.unit},#{historyNodeData.time})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_history_node_data ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+	<!-- 新增, 并返回id -->
+	<insert id="insert" parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		INSERT INTO iot_node_info
+		(name,device_code,iot_node_type,iot_protocal_category,seq,scene_id,delete_flag,iot_node_status,img_id,aid,mid,template_id,lonLat,infos,frequency,
+		measure_unit_type,iot_node_data_type,store_strage,formula_up,formula_down,disable_flag)
+		VALUES
+		(#{nodeInfo.name},#{nodeInfo.device_code},#{nodeInfo.iot_node_type},#{nodeInfo.iot_protocal_category},#{nodeInfo.seq},#{nodeInfo.scene_id},#{nodeInfo.delete_flag},#{nodeInfo.iot_node_status},#{nodeInfo.img_id},#{nodeInfo.aid},#{nodeInfo.mid},#{nodeInfo.template_id} ,#{nodeInfo.lonLat},#{nodeInfo.infos},#{nodeInfo.frequency},
+		#{nodeInfo.measure_unit_type},#{nodeInfo.iot_node_data_type},#{nodeInfo.store_strage},#{nodeInfo.formula_up},#{nodeInfo.formula_down},#{nodeInfo.disable_flag})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_node_info ORDER BY id desc LIMIT 1
+		</selectKey>
+ </insert>
+
+	<insert id="insertIotAlarmInfo" parameterType="com.enji_iot.util.Entity.bo.IotAlarmInfoBO">
+		INSERT INTO iot_alarm_info
+		(description,node_id,iot_trigger_alarm_level,sdata,iot_alarm_process_status,aid,mid,name,alarm_sdata)
+		VALUES
+		(#{alarmInfo.description},#{alarmInfo.node_id},#{alarmInfo.iot_trigger_alarm_level},#{alarmInfo.sdata},#{alarmInfo.iot_alarm_process_status},#{alarmInfo.aid},#{alarmInfo.mid},#{alarmInfo.name},#{alarmInfo.alarm_sdata})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from iot_alarm_info ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+
+	<insert id="insertAlarmTriggerRecord" parameterType="com.enji_iot.util.Entity.bo.AlarmTriggerRecordBO">
+		INSERT INTO alarm_trigger_record
+		(user_id,trigger_type,remark,content)
+		VALUES
+		(#{alarmTriggerRecord.user_id},#{alarmTriggerRecord.trigger_type},#{alarmTriggerRecord.remark},#{alarmTriggerRecord.content})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select id from alarm_trigger_record ORDER BY id desc LIMIT 1
+		</selectKey>
+	</insert>
+
+	<update id="updatevoicenum" parameterType="com.enji_iot.util.Entity.bo.UserAccountInfoBO">
+		UPDATE user_account_info SET voice_num=voice_num-1 where id=#{userAccountInfo.id} AND voice_num>0
+	</update>
+
+	<update id="updateNodeStatus"  parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		UPDATE iot_node_info SET mtime=now()
+		<if test="iot_node_status!=null">
+			,iot_node_status=#{nodeInfo.iot_node_status}
+		</if>
+		WHERE device_code=#{nodeInfo.device_code}
+	</update>
+
+	<!-- 检索记录列表 -->
+	<select id="selectList" parameterType="com.enji_iot.util.Entity.bo.IotNodeInfoBO"
+	resultType="com.enji_iot.util.Entity.bo.IotNodeInfoBO">
+		SELECT o.* , ic.name AS scene_name, us.name AS user_name FROM iot_node_info o LEFT JOIN iot_scene_info ic ON o.scene_id = ic.id  LEFT JOIN user_info us ON ic.user_id = us.id
+		WHERE 1=1
+		<if test="id_array!=null">
+			AND o.id IN
+			<foreach collection="id_array" index="index" item="item" open="(" separator="," close=")">
+				#{nodeInfo.item}
+			</foreach>
+		</if>
+		<if test="id!=null">
+			AND o.id=#{nodeInfo.id}
+		</if>
+		<if test="name!=null and name !=''">
+			AND o.name LIKE CONCAT("%", #{nodeInfo.name},"%")
+		</if>
+		<if test="device_code!=null and device_code !='' ">
+			AND o.device_code LIKE CONCAT("%", #{nodeInfo.device_code},"%")
+		</if>
+		<if test="iot_node_type!=null">
+			AND o.iot_node_type=#{nodeInfo.iot_node_type}
+		</if>
+		<if test="iot_protocal_category!=null and iot_protocal_category !='' ">
+			AND o.iot_protocal_category=#{nodeInfo.iot_protocal_category}
+		</if>
+		<if test="seq!=null">
+			AND o.seq=#{nodeInfo.seq}
+		</if>
+		<if test="scene_id!=null">
+			AND o.scene_id=#{nodeInfo.scene_id}
+		</if>
+		<if test="delete_flag!=null">
+			AND o.delete_flag=#{nodeInfo.delete_flag}
+		</if>
+		<if test="user_id !=null">
+			AND  o.scene_id IN ( SELECT scene_id FROM iot_scene_user_relation WHERE user_id = #{nodeInfo.user_id} )
+		</if>
+		<if test="iot_node_status!=null">
+			AND o.iot_node_status=#{nodeInfo.iot_node_status}
+		</if>
+		<if test="img_id!=null">
+			AND o.img_id=#{nodeInfo.img_id}
+		</if>
+		<if test="atime!=null">
+			AND o.atime=#{nodeInfo.atime}
+		</if>
+		<if test="mid!=null">
+			AND o.mid=#{nodeInfo.mid}
+		</if>
+		<if test="mtime!=null">
+			AND o.mtime=#{nodeInfo.mtime}
+		</if>
+		<!-- 		<if test="aid !=null"> -->
+		<!-- 			OR o.aid =#{aid} -->
+		<!-- 		</if> -->
+		ORDER BY o.seq ASC, o.id ASC
+	</select>
+
+	<!-- 检索记录 -->
+	<select id="selectOne" parameterType="com.enji_iot.util.Entity.bo.ContactUserInfoBO"
+			resultType="com.enji_iot.util.Entity.bo.ContactUserInfoBO">
+		SELECT o.* FROM contact_user_info o WHERE o.id=#{contactUserInfo.id} LIMIT 1
+	</select>
+
+	<update id="updatesmsnum" parameterType="com.enji_iot.util.Entity.bo.UserAccountInfoBO">
+		UPDATE user_account_info SET sms_num=sms_num-1 where id=#{userAccountInfo.id} AND sms_num>0
+	</update>
+</mapper>
