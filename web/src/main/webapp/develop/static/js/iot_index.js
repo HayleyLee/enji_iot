@@ -1,3 +1,8 @@
+var time = new Date();
+let year = time.getFullYear();
+let month = time.getMonth()+1;
+let day = time.getDate();
+
 function data_count() {
     //scene_count
     $.ajax({
@@ -40,6 +45,22 @@ function data_count() {
         }
     });
 }
+
+function history_3month_count() {
+    $.ajax({
+        type:"post",
+        url:"/history/count/3month",
+        data:{"user_id":"1"},
+        success:function (data) {
+            var Data = data[1];
+            var month_array = Data[0];
+            bounty.default({ el:'#month_0',value:month_array[0].toString() });
+            bounty.default({ el:'#month_1',value:month_array[1].toString() });
+            bounty.default({ el:'#month_2',value:month_array[2].toString() });
+        }
+    });
+}
+
 function iot_index() {
     let str = "";
     //加载动画
@@ -156,21 +177,21 @@ function iot_index() {
         "\t\t\t\t\t\t\t\t\t<div class=\"panel-body\">\n" +
         "\t\t\t\t\t\t\t\t\t\t<ul class=\"sales-q2\">\n" +
         "\t\t\t\t\t\t\t\t\t\t\t<li class=\"clearfix\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"month-type warning\">7月</div>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"month-type warning\">"+month+"月</div>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"sale-info\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t\t\t<h3>18<span class=\"text-yellow\"><i class=\"icon-triangle-up\"></i></span></h3>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t\t\t<h3 id='month_0' style='display: inline;fill: white'></h3><h3 style='display: inline;margin-left: 5%'><span class=\"text-yellow\"><i class=\"icon-triangle-up\"></i></span></h3>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t</li>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t<li class=\"clearfix\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"month-type info\">6月</div>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"month-type info\">"+(month-=1)+"月</div>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"sale-info\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t\t\t<h3>12<span class=\"text-blue\"><i class=\"icon-triangle-up\"></i></span></h3>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t\t\t<h3 id='month_1' style='display: inline;fill: white'></h3><h3 style='display: inline;margin-left: 5%'><span class=\"text-blue\"><i class=\"icon-triangle-up\"></i></span></h3>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t</li>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t<li class=\"clearfix\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"month-type\">5月</div>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"month-type\">"+(month-=1)+"月</div>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"sale-info\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t\t\t<h3>10<span class=\"text-red\"><i class=\"icon-triangle-down\"></i></span></h3>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t\t\t<h3 id='month_2' style='display: inline;fill: white'></h3><h3 style='display: inline;margin-left: 5%'><span class=\"text-red\"><i class=\"icon-triangle-down\"></i></span></h3>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t</li>\n" +
         "\t\t\t\t\t\t\t\t\t\t</ul>\n" +
@@ -283,4 +304,5 @@ function iot_index() {
             "   </div>\n");
     }
     data_count();
+    history_3month_count();
 }

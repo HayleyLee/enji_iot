@@ -28,4 +28,13 @@
 		<if test="iotHistoryNodeInfo.start_time !=null">AND time >= #{iotHistoryNodeInfo.start_time}</if>
 		<if test="iotHistoryNodeInfo.end_time !=null">	AND time &lt;= #{iotHistoryNodeInfo.end_time}</if>
 	</select>
+	<select id="select" parameterType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO" resultType="com.enji_iot.util.Entity.bo.IotHistoryNodeDataBO">
+		SELECT * FROM iot_history_node_data
+		WHERE 1=1
+		<if test="iotHistoryNodeInfo.scene_id!=null">AND scene_id = #{iotHistoryNodeInfo.scene_id}</if>
+		<if test="iotHistoryNodeInfo.device_code!=null">AND device_code = #{iotHistoryNodeInfo.device_code}</if>
+		<if test="iotHistoryNodeInfo.name!=null">AND name = #{iotHistoryNodeInfo.name}</if>
+		<if test="iotHistoryNodeInfo.val!=null">AND val = #{iotHistoryNodeInfo.val}</if>
+		<if test="iotHistoryNodeInfo.unit!=null">AND unit = #{iotHistoryNodeInfo.unit}</if>
+	</select>
 </mapper>

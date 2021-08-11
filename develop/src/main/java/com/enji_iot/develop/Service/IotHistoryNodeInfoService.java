@@ -23,4 +23,6 @@ public interface IotHistoryNodeInfoService {
     Map<String,Object> selectList(IotHistoryNodeDataBO iotHistoryNodeData);
 
     JSONArray selectCount(IotSceneInfoBO scene);
+
+    JSONArray count3month(IotSceneInfoBO scene);
 }

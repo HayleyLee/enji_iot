@@ -46,6 +46,15 @@ public class IotHistoryNodeInfoController {
 		scene.setUser_id(Integer.parseInt(user_id));
 		return iotHistoryNodeInfoService.selectCount(scene);
 	}
+	/**
+	 * 历史3月统计
+	 */
+	@RequestMapping(method = RequestMethod.POST,value = RequestURLIOT.SensorHistoryInfo.HISTORY_COUNT_3MONTH)
+	public @ResponseBody JSONArray count3month(String user_id){
+		IotSceneInfoBO scene = new IotSceneInfoBO();
+		scene.setUser_id(Integer.parseInt(user_id));
+		return iotHistoryNodeInfoService.count3month(scene);
+	}
 
 	/**
 	 * 检索

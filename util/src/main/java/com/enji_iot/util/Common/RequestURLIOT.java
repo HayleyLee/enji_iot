@@ -88,7 +88,10 @@ public class RequestURLIOT {
 		public final static String SENSOR_HISTORY_INFO_INFO = "/sensor/history/excel";
 		
 		public final static String SENSORS_HISTORY_DATA = "/sensor/history/data" ;
+
 		public final static String HISTORY_COUNT = "/history/count" ;
+
+		public final static String HISTORY_COUNT_3MONTH = "/history/count/3month" ;
 	}
 
 	public static class AlarmInfo {

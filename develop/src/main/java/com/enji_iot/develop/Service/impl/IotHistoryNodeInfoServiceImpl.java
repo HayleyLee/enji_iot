@@ -13,8 +13,7 @@ import net.sf.json.JSONArray;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service(value = "IotHistoryNodeInfoService")
 public class IotHistoryNodeInfoServiceImpl implements IotHistoryNodeInfoService {
@@ -204,6 +203,41 @@ public class IotHistoryNodeInfoServiceImpl implements IotHistoryNodeInfoService 
                 r += iotHistoryNodeInfoMapper.selectHistoryNodeCount(history);
             }
             return ResponseUtil.getResponse(ResponseType.SUCCESS_ID,ResponseType.SUCCESS_MESSAGES,r);
+        }
+        else return ResponseUtil.getResponse(ResponseType.SUCCESS_ID,ResponseType.SUCCESS_MESSAGES);
+    }
+
+    @Override
+    public JSONArray count3month(IotSceneInfoBO scene) {
+        List<IotSceneInfoBO> sceneList = iotSceneInfoMapper.selects(scene);
+        if(sceneList.size()>0){
+            int month_0 = TimeUtil.getNowMonth();
+            int month_1 = month_0 - 1;
+            int month_2 = month_1 - 1;
+            String strMonth_0 = TimeUtil.toString(month_0);
+            String strMonth_1 = TimeUtil.toString(month_1);
+            String strMonth_2 = TimeUtil.toString(month_2);
+            int count_0 = 0;
+            int count_1 = 0;
+            int count_2 = 0;
+            ArrayList<IotHistoryNodeDataBO> list = new ArrayList<>();
+            for(IotSceneInfoBO sceneInfo : sceneList){
+                IotHistoryNodeDataBO history = new IotHistoryNodeDataBO();
+                history.setScene_id(sceneInfo.getId());
+                list.addAll(iotHistoryNodeInfoMapper.select(history));
+            }
+            for(IotHistoryNodeDataBO historyNode : list){
+                if(historyNode.getTime().contains(":"+strMonth_0+":")){
+                    count_0 += 1;
+                }
+                if(historyNode.getTime().contains(":"+strMonth_1+":")){
+                    count_1 += 1;
+                }
+                if(historyNode.getTime().contains(":"+strMonth_2+":")){
+                    count_2 += 1;
+                }
+            }
+            return ResponseUtil.getResponse(ResponseType.SUCCESS_ID,ResponseType.SUCCESS_MESSAGES,Arrays.asList(count_0,count_1,count_2));
         }
         else return ResponseUtil.getResponse(ResponseType.SUCCESS_ID,ResponseType.SUCCESS_MESSAGES);
     }

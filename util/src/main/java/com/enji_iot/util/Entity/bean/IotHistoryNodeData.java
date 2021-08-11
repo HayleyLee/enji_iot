@@ -21,13 +21,10 @@ public class IotHistoryNodeData extends BaseBean{
 
     private String unit;
 
-    private  Integer sensor_type;
-    private  String sensor_type_name;
-
     private  Integer startPage;
     private  Integer endPage;
 
-    public IotHistoryNodeData(Integer id, Integer scene_id, String device_code, String name, Float val, String time, String unit, Integer sensor_type, String sensor_type_name, Integer startPage, Integer endPage) {
+    public IotHistoryNodeData(Integer id, Integer scene_id, String device_code, String name, Float val, String time, String unit, Integer startPage, Integer endPage) {
         this.id = id;
         this.scene_id = scene_id;
         this.device_code = device_code;
@@ -35,13 +32,11 @@ public class IotHistoryNodeData extends BaseBean{
         this.val = val;
         this.time = time;
         this.unit = unit;
-        this.sensor_type = sensor_type;
-        this.sensor_type_name = sensor_type_name;
         this.startPage = startPage;
         this.endPage = endPage;
     }
 
-    public IotHistoryNodeData(String sensor_name, Integer scene_id, Integer user_id, String start_time, String end_time, Integer id, List<Integer> id_array, Integer delete_flag, Integer offset, Integer limit, Map<String, String> data, Integer id1, Integer scene_id1, String device_code, String name, Float val, String time, String unit, Integer sensor_type, String sensor_type_name, Integer startPage, Integer endPage) {
+    public IotHistoryNodeData(String sensor_name, Integer scene_id, Integer user_id, String start_time, String end_time, Integer id, List<Integer> id_array, Integer delete_flag, Integer offset, Integer limit, Map<String, String> data, Integer id1, Integer scene_id1, String device_code, String name, Float val, String time, String unit, Integer startPage, Integer endPage) {
         super(sensor_name, scene_id, user_id, start_time, end_time, id, id_array, delete_flag, offset, limit, data);
         this.id = id1;
         this.scene_id = scene_id1;
@@ -50,13 +45,11 @@ public class IotHistoryNodeData extends BaseBean{
         this.val = val;
         this.time = time;
         this.unit = unit;
-        this.sensor_type = sensor_type;
-        this.sensor_type_name = sensor_type_name;
         this.startPage = startPage;
         this.endPage = endPage;
     }
 
-    public IotHistoryNodeData(Integer id, List<Integer> id_array, Integer delete_flag, Integer offset, Integer limit, Map<String, String> data, Integer id1, Integer scene_id, String device_code, String name, Float val, String time, String unit, Integer sensor_type, String sensor_type_name, Integer startPage, Integer endPage) {
+    public IotHistoryNodeData(Integer id, List<Integer> id_array, Integer delete_flag, Integer offset, Integer limit, Map<String, String> data, Integer id1, Integer scene_id, String device_code, String name, Float val, String time, String unit, Integer startPage, Integer endPage) {
         super(id, id_array, delete_flag, offset, limit, data);
         this.id = id1;
         this.scene_id = scene_id;
@@ -65,8 +58,6 @@ public class IotHistoryNodeData extends BaseBean{
         this.val = val;
         this.time = time;
         this.unit = unit;
-        this.sensor_type = sensor_type;
-        this.sensor_type_name = sensor_type_name;
         this.startPage = startPage;
         this.endPage = endPage;
     }
@@ -132,22 +123,6 @@ public class IotHistoryNodeData extends BaseBean{
 
     public void setUnit(String unit) {
         this.unit = unit;
-    }
-
-    public Integer getSensor_type() {
-        return sensor_type;
-    }
-
-    public void setSensor_type(Integer sensor_type) {
-        this.sensor_type = sensor_type;
-    }
-
-    public String getSensor_type_name() {
-        return sensor_type_name;
-    }
-
-    public void setSensor_type_name(String sensor_type_name) {
-        this.sensor_type_name = sensor_type_name;
     }
 
     public Integer getStartPage() {

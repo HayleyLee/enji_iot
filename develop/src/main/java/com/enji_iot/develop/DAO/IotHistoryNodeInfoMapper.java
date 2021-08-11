@@ -26,4 +26,5 @@ public interface IotHistoryNodeInfoMapper {
 
     Integer insert(@Param(value = "iotHistoryNodeInfo") IotHistoryNodeDataBO iotHistoryNodeData);
 
+    List<IotHistoryNodeDataBO> select(@Param(value = "iotHistoryNodeInfo") IotHistoryNodeDataBO iotHistoryNodeData);
 }
