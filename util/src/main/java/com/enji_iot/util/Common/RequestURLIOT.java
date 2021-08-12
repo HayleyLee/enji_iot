@@ -310,4 +310,12 @@ public class RequestURLIOT {
 		public final static String ALARM_INFO_ALL = "/page/alarm-all";
 
 	}
+
+	public static final class IotNodeAction {
+		public static final String IOT_NODE_ACTION = "/node_action";
+
+		public static final String MONTH_COUNT = "/node_action/month_count";
+
+		public static final String MONTH_DATA = "/node_action/month_data";
+	}
 }

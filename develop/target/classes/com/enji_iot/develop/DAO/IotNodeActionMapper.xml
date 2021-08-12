@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enji_iot.develop.DAO.IotNodeActionMapper">
+
+	<sql id="sql_select_condition">
+		where 1=1
+		<if test="iotNodeAction.id!=null">
+			and id=#{iotNodeAction.id}
+		</if>
+		<if test="iotNodeAction.scene_id!=null">
+			and scene_id=#{iotNodeAction.scene_id}
+		</if>
+		<if test="iotNodeAction.device_code!=null">
+			and device_code=#{iotNodeAction.device_code}
+		</if>
+		<if test="iotNodeAction.device_status!=null">
+			and device_status=#{iotNodeAction.device_status}
+		</if>
+		<if test="iotNodeAction.command!=null">
+			and command=#{iotNodeAction.command}
+		</if>
+	</sql>
+
+	<select id="select" parameterType="com.enji_iot.util.Entity.bo.IotNodeActionBO" resultType="com.enji_iot.util.Entity.bo.IotNodeActionBO">
+		select * from iot_node_action
+		<include refid="sql_select_condition"/>
+	</select>
+	<select id="selectCount" parameterType="com.enji_iot.util.Entity.bo.IotNodeActionBO" resultType="java.lang.Integer">
+		select count(*) from iot_node_action
+		<include refid="sql_select_condition"/>
+	</select>
+</mapper>

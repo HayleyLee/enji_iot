@@ -10,8 +10,11 @@ function data_count() {
        url:"/scene/count",
        data:{"user_id":"1"},
        success:function (data) {
-           var Data = data[1];
-           bounty.default({ el:'#appointmentsOdometer',value:Data[0].toString() })
+           if(data[0].responseId==="S10001"){
+               var Data = data[1];
+               bounty.default({ el:'#appointmentsOdometer',value:Data[0].toString() })
+           }
+           else layer.msg("获取场景统计数据失败！错误码："+data[0].responseMsg);
        }
     });
     //device_count
@@ -20,8 +23,11 @@ function data_count() {
         url:"/node/count",
         data:{"user_id":"1"},
         success:function (data) {
-            var Data = data[1];
-            bounty.default({ el:'#projectsOdometer',value:Data[0].toString() })
+            if(data[0].responseId==="S10001"){
+                var Data = data[1];
+                bounty.default({ el:'#projectsOdometer',value:Data[0].toString() })
+            }
+            else layer.msg("获取设备统计数据失败！错误码："+data[0].responseMsg);
         }
     });
     //trigger_count
@@ -30,8 +36,11 @@ function data_count() {
         url:"/trigger/count",
         data:{"user_id":"1"},
         success:function (data) {
-            var Data = data[1];
-            bounty.default({ el:'#shopOdometer',value:Data[0].toString() })
+            if(data[0].responseId==="S10001"){
+                var Data = data[1];
+                bounty.default({ el:'#shopOdometer',value:Data[0].toString() })
+            }
+            else layer.msg("获取触发器统计数据失败！错误码："+data[0].responseMsg);
         }
     });
     //history_count
@@ -40,25 +49,126 @@ function data_count() {
         url:"/history/count",
         data:{"user_id":"1"},
         success:function (data) {
-            var Data = data[1];
-            bounty.default({ el:'#interviewsOdometer',value:Data[0].toString() })
+            if(data[0].responseId==="S10001"){
+                var Data = data[1];
+                bounty.default({ el:'#interviewsOdometer',value:Data[0].toString() })
+            }
+            else layer.msg("获取历史收发数据失败！错误码："+data[0].responseMsg);
         }
     });
 }
-
+function avg_month(data) {
+    var res = 0;
+    if(data>0){
+        res = data/day;
+    }
+    bounty.default({el:"#avg",value:res.toString()});
+}
+function contrast(this_month,previous_month) {
+    var res = 0;
+    if(previous_month>0){
+        res = (this_month-previous_month) / previous_month * 100;
+    }
+    bounty.default({el:"#contrast",value:res+"%"});
+}
 function history_3month_count() {
     $.ajax({
         type:"post",
         url:"/history/count/3month",
         data:{"user_id":"1"},
         success:function (data) {
-            var Data = data[1];
-            var month_array = Data[0];
-            bounty.default({ el:'#month_0',value:month_array[0].toString() });
-            bounty.default({ el:'#month_1',value:month_array[1].toString() });
-            bounty.default({ el:'#month_2',value:month_array[2].toString() });
+            if(data[0].responseId==="S10001"){
+                var Data = data[1];
+                var month_array = Data[0];
+                var this_month = month_array[0];
+                var previous_month = month_array[1];
+                avg_month(this_month);
+                contrast(this_month,previous_month);
+                bounty.default({ el:'#month',value:this_month.toString() });
+                bounty.default({ el:'#month_0',value:this_month.toString() });
+                bounty.default({ el:'#month_1',value:previous_month.toString() });
+                bounty.default({ el:'#month_2',value:month_array[2].toString() });
+            }
+            else layer.msg("获取月份统计数据失败！错误码："+data[0].responseMsg);
         }
     });
+}
+function month_send() {
+    $.ajax({
+        type:"post",
+        url:"/node_action/month_count",
+        data:{"user_id":"1"},
+        success:function (data) {
+            if(data[0].responseId=="S10001"){
+                bounty.default({ el:'#month_send',value:data[1].toString() });
+            }
+            else layer.msg("获取本月发送数据失败！错误码："+data[0].responseMsg);
+        }
+    })
+}
+
+function month_data_echarts() {
+    $.ajax({
+        type:"post",
+        url:"/node_action/month_data",
+        data:{"user_id":"1"},
+        success:function (data) {
+            if(data[0].responseId=="S10001"){
+                let data_obj = data[1];
+                let arrays = data_obj[0];
+                var time_line = arrays[0];
+                var send_arrays = arrays[1];
+                var back_arrays = arrays[2];
+                var chartDom = document.getElementById("audienceOverview");
+                var myChart = echarts.init(chartDom, 'dark');
+                var option;
+                option = {
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['发送数据', '回传数据']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: time_line
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: '发送数据',
+                            type: 'line',
+                            stack: '总量',
+                            data: send_arrays
+                        },
+                        {
+                            name: '回传数据',
+                            type: 'line',
+                            stack: '总量',
+                            data: back_arrays
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            }
+            else layer.msg("获取本月发送数据失败！错误码："+data[0].responseMsg);
+        }
+    });
+
 }
 
 function iot_index() {
@@ -162,7 +272,7 @@ function iot_index() {
         "\t\t\t\t\t\t\t\t<h4>本月收发数据</h4>\n" +
         "\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t<div class=\"panel-body\">\n" +
-        "\t\t\t\t\t\t\t\t<div id=\"audienceOverview\" class=\"chart-height1\"></div>\n" +
+        "\t\t\t\t\t\t\t\t<div id=\"audienceOverview\" class=\"chart-height1\" style='z-index: 999'></div>\n" +
         // "\t\t\t\t\t\t\t\t<h1 class=\"audience-total\"><i class=\"icon-triangle-up\"></i>3%<span>本月 / 上月</span></h1>\n" +
         "\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t</div>\n" +
@@ -209,7 +319,7 @@ function iot_index() {
         "\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t<div class=\"panel-body\">\n" +
         "\t\t\t\t\t\t\t\t\t\t<div class=\"sessions\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t<h2>23</h2>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t<h2 id='month_send' style='fill: white'></h2>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t<div id=\"sessions\" class=\"graph\"></div>\n" +
         "\t\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t</div>\n" +
@@ -222,7 +332,7 @@ function iot_index() {
         "\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t<div class=\"panel-body\">\n" +
         "\t\t\t\t\t\t\t\t\t\t<div class=\"sessions\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t<h2>2545</h2>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t<h2 id='month' style='fill: white'></h2>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t<div id=\"users\" class=\"graph\"></div>\n" +
         "\t\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t</div>\n" +
@@ -235,7 +345,7 @@ function iot_index() {
         "\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t<div class=\"panel-body\">\n" +
         "\t\t\t\t\t\t\t\t\t\t<div class=\"sessions\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t<h2>21</h2>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t<h2 id='avg' style='fill: white'></h2>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t<div id=\"duration\" class=\"graph\"></div>\n" +
         "\t\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t</div>\n" +
@@ -248,7 +358,7 @@ function iot_index() {
         "\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t<div class=\"panel-body\">\n" +
         "\t\t\t\t\t\t\t\t\t\t<div class=\"sessions\">\n" +
-        "\t\t\t\t\t\t\t\t\t\t\t<h2><span class=\"text-red\"><i class=\"icon-triangle-down\"></i></span>12.4%</h2>\n" +
+        "\t\t\t\t\t\t\t\t\t\t\t<h2 style='display: inline;position: absolute;left: 20%;top: 25%'><span class=\"text-red\"><i class=\"icon-triangle-down\"></i></span></h2><h2 id='contrast' style='display: inline;fill: white'></h2>\n" +
         "\t\t\t\t\t\t\t\t\t\t\t<div id=\"bouncerate\" class=\"graph\"></div>\n" +
         "\t\t\t\t\t\t\t\t\t\t</div>\n" +
         "\t\t\t\t\t\t\t\t\t</div>\n" +
@@ -303,6 +413,8 @@ function iot_index() {
             "    </div>\n" +
             "   </div>\n");
     }
+    month_data_echarts();
     data_count();
     history_3month_count();
+    month_send();
 }
